@@ -1,31 +1,27 @@
 /* Функция отрисовки карточки */
-export const renderTrip = (count) => {
+export const renderTrip = (tripData) => {
   let content = ``;
 
   /* Шаблон карточки */
-  const cardTemplate = () => (`<article class="trip-point">
-          <i class="trip-icon">🚕</i>
-          <h3 class="trip-point__title">Taxi to Airport</h3>
+  const cardTemplate = (data) => (`
+        <article class="trip-point">
+          <i class="trip-icon">${data.icon}</i>
+          <h3 class="trip-point__title">${data.type}</h3>
           <p class="trip-point__schedule">
-            <span class="trip-point__timetable">10:00&nbsp;— 11:00</span>
+            <span class="trip-point__timetable">${data.time[0]}:00 — ${data.time[1]}:00</span>
             <span class="trip-point__duration">1h 30m</span>
           </p>
-          <p class="trip-point__price">€&nbsp;20</p>
+          <p class="trip-point__price">€&nbsp;${data.price}</p>
           <ul class="trip-point__offers">
+          ${data.offers.map((it) => `
             <li>
-              <button class="trip-point__offer">Order UBER +€&nbsp;20</button>
-            </li>
-            <li>
-              <button class="trip-point__offer">Upgrade to business +€&nbsp;20</button>
-            </li>
+              <button class="trip-point__offer">${it}</button>
+            </li>`).join(``)}
           </ul>
         </article>`);
 
-  let i = 0;
-
-  while (i < count) {
-    content += cardTemplate();
-    i++;
+  for (const it of tripData.events) {
+    content += cardTemplate(it);
   }
 
   /* Вывод фильтров на станицу */

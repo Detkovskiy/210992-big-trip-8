@@ -1,7 +1,7 @@
 import {renderFilter} from '../src/make-filter.js';
 import {renderTrip} from './make-point.js';
 import {getRandomFromInterval, render} from '../src/utils.js';
-
+import {trips} from '../src/data.js';
 
 const tripFilter = document.querySelector(`.trip-filter`);
 const tripItems = document.querySelector(`.trip-day__items`);
@@ -21,10 +21,8 @@ const filtersName = [
 ];
 
 render(tripFilter, renderFilter(filtersName));
-render(tripItems, renderTrip(7));
+render(tripItems, renderTrip(trips()));
 
-
-renderTrip(7);
 
 /* Обработчик выбора фильтра */
 tripFilter.addEventListener(`change`, () => render(tripItems, renderTrip(getRandomFromInterval(3, 10))));
