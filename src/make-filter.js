@@ -1,12 +1,4 @@
-const tripFilter = document.querySelector(`.trip-filter`);
-
-/* Функция отрисовки контента */
-const render = (root, content) => {
-  root.innerHTML = content;
-};
-
-export {tripFilter};
-export default (filters) => {
+export const renderFilter = (filters) => {
   let content = ``;
 
   /* Шаблон фильтра */
@@ -21,6 +13,6 @@ export default (filters) => {
   });
 
   /* Вывод фильтров на станицу */
-  render(tripFilter, content);
+  return content;
 };
 

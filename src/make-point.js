@@ -1,12 +1,5 @@
-const tripItems = document.querySelector(`.trip-day__items`);
-
-/* Функция отрисовки контента */
-const render = (root, content) => {
-  root.innerHTML = content;
-};
-
 /* Функция отрисовки карточки */
-export default (count) => {
+export const renderTrip = (count) => {
   let content = ``;
 
   /* Шаблон карточки */
@@ -36,5 +29,5 @@ export default (count) => {
   }
 
   /* Вывод фильтров на станицу */
-  render(tripItems, content);
+  return content;
 };
