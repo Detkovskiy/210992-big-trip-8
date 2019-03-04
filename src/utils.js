@@ -2,14 +2,14 @@ const getRandomFromInterval = (min, max) => Math.floor(Math.random() * (max - mi
 
 
 const getRandomArr = (count, arr) => {
-  const arrOffers = [];
+  const randomArr = [];
   const sizeArr = arr.length < count ? arr.length : count;
 
   for (let i = 0; i < sizeArr; i++) {
-    arrOffers.push(arr[getRandomFromInterval(0, arr.length)]);
+    randomArr.push(arr[getRandomFromInterval(0, arr.length)]);
   }
 
-  return arrOffers;
+  return randomArr;
 };
 
 const getRandomDescription = (count, text) => {
