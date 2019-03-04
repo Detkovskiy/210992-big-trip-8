@@ -13,7 +13,7 @@ export const renderTrip = (tripData) => {
           </p>
           <p class="trip-point__price">€&nbsp;${data.price}</p>
           <ul class="trip-point__offers">
-          ${data.offers.map((it) => `
+          ${[...data.offers].map((it) => `
             <li>
               <button class="trip-point__offer">${it}</button>
             </li>`).join(``)}
