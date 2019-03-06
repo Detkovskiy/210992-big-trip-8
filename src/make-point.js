@@ -2,6 +2,7 @@ export class Trip {
   constructor(data) {
     this._events = data.events;
     this._element = document.createElement(`div`);
+    this._onEdit = null;
   }
 
 
@@ -13,7 +14,7 @@ export class Trip {
                 <span class="trip-point__timetable">${this._timeStart}:00 — ${this._timeEnd}:00</span>
                 <span class="trip-point__duration">1h 30m</span>
               </p>
-              <p class="trip-point__price">€&nbsp;${this._price}</p>
+              <p class="trip-point__price">€ ${this._price}</p>
               <ul class="trip-point__offers">
               ${[...this._offers].map((it) => `
                 <li>
@@ -23,6 +24,19 @@ export class Trip {
             </article>`;
   }
 
+  set onEdit(fn) {
+    this._onEdit = fn;
+  }
+
+  _onEditButtonClick() {
+    if (typeof this._onEdit === `function`) {
+      this._onEdit();
+    }
+  }
+
+  bind() {
+    this._element.querySelector(`.trip-point`).addEventListener(`click`, this._onEditButtonClick.bind(this));
+  }
 
   render() {
     for (let i = 0; i < this._events.length; i++) {
@@ -34,7 +48,15 @@ export class Trip {
       this._offers = this._events[i].offers;
 
       this._element.innerHTML += this.cardTemplate;
+      this.bind();
     }
     return this._element;
+  }
+
+  get element() {
+    return this._element;
+  }
+  unRender() {
+    this._element = null;
   }
 }
