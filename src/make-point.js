@@ -1,29 +1,40 @@
-/* Функция отрисовки карточки */
-export const renderTrip = (tripData) => {
-  let content = ``;
-
-  /* Шаблон карточки */
-  const cardTemplate = (data) => (`
-        <article class="trip-point">
-          <i class="trip-icon">${data.icon}</i>
-          <h3 class="trip-point__title">${data.type}</h3>
-          <p class="trip-point__schedule">
-            <span class="trip-point__timetable">${data.time[0]}:00 — ${data.time[1]}:00</span>
-            <span class="trip-point__duration">1h 30m</span>
-          </p>
-          <p class="trip-point__price">€&nbsp;${data.price}</p>
-          <ul class="trip-point__offers">
-          ${[...data.offers].map((it) => `
-            <li>
-              <button class="trip-point__offer">${it}</button>
-            </li>`).join(``)}
-          </ul>
-        </article>`);
-
-  for (const it of tripData.events) {
-    content += cardTemplate(it);
+export class Trip {
+  constructor(data) {
+    this._events = data.events;
+    this._element = document.createElement(`div`);
   }
 
-  /* Вывод фильтров на станицу */
-  return content;
-};
+
+  get cardTemplate() {
+    return `<article class="trip-point">
+              <i class="trip-icon">${this._icon}</i>
+              <h3 class="trip-point__title">${this._type}</h3>
+              <p class="trip-point__schedule">
+                <span class="trip-point__timetable">${this._timeStart}:00 — ${this._timeEnd}:00</span>
+                <span class="trip-point__duration">1h 30m</span>
+              </p>
+              <p class="trip-point__price">€&nbsp;${this._price}</p>
+              <ul class="trip-point__offers">
+              ${[...this._offers].map((it) => `
+                <li>
+                  <button class="trip-point__offer">${it}</button>
+                </li>`).join(``)}
+              </ul>
+            </article>`;
+  }
+
+
+  render() {
+    for (let i = 0; i < this._events.length; i++) {
+      this._icon = this._events[i].icon;
+      this._type = this._events[i].type;
+      this._timeStart = this._events[i].time[0];
+      this._timeEnd = this._events[i].time[1];
+      this._price = this._events[i].price;
+      this._offers = this._events[i].offers;
+
+      this._element.innerHTML += this.cardTemplate;
+    }
+    return this._element;
+  }
+}

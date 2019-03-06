@@ -18,6 +18,7 @@ const getRandomDescription = (count, text) => {
   return getRandomArr(count, arrStroke).join(`. `);
 };
 
+
 /* Функция отрисовки контента */
 const render = (root, content) => {
   root.innerHTML = content;

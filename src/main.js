@@ -1,5 +1,5 @@
 import {renderFilter} from '../src/make-filter.js';
-import {renderTrip} from './make-point.js';
+import {Trip} from './make-point.js';
 import {getRandomFromInterval, render} from '../src/utils.js';
 import {getTrips} from '../src/data.js';
 
@@ -21,8 +21,14 @@ const filtersName = [
 ];
 
 render(tripFilter, renderFilter(filtersName));
-render(tripItems, renderTrip(getTrips()));
+//render(tripItems, renderTrip(getTrips()));
 
 
 /* Обработчик выбора фильтра */
-tripFilter.addEventListener(`change`, () => render(tripItems, renderTrip(getRandomFromInterval(3, 10))));
+//tripFilter.addEventListener(`change`, () => render(tripItems, renderTrip(getRandomFromInterval(3, 10))));
+
+
+const cardTask = new Trip(getTrips());
+tripItems.appendChild(cardTask.render());
+
+
