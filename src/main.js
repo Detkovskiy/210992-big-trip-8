@@ -1,5 +1,5 @@
 import {renderFilter} from '../src/make-filter.js';
-import {Trip} from './make-point.js';
+import {PointTrip} from './make-point.js';
 import {EditTrip} from './pointEdit';
 import {render} from '../src/utils.js';
 import {getTrips} from '../src/data.js';
@@ -23,19 +23,34 @@ const filtersName = [
 
 render(tripFilter, renderFilter(filtersName));
 
-const cardTask = new Trip(getTrips());
-tripItems.appendChild(cardTask.render());
+const getDataForPointTrip = getTrips();
 
-const editCardTask = new EditTrip(getTrips());
+const renderPointTrip = (data) => {
 
-cardTask.onEdit = () => {
-  editCardTask.render();
-  tripItems.replaceChild(editCardTask.element, cardTask.element);
-  cardTask.unRender();
+  const fragment = document.createDocumentFragment();
+
+  for (const it of data.events) {
+
+    const pointTrip = new PointTrip(it);
+    const editPointTrip = new EditTrip(it);
+
+    fragment.appendChild(pointTrip.render());
+
+    pointTrip.onEdit = () => {
+      editPointTrip.render();
+      tripItems.replaceChild(editPointTrip.element, pointTrip.element);
+      pointTrip.unRender();
+    };
+
+    editPointTrip.onSubmit = () => {
+      pointTrip.render();
+      tripItems.replaceChild(pointTrip.element, editPointTrip.element);
+      editPointTrip.unRender();
+    };
+  }
+
+  tripItems.appendChild(fragment);
+
 };
 
-editCardTask.onSubmit = () => {
-  cardTask.render();
-  tripItems.replaceChild(cardTask.element, editCardTask.element);
-  editCardTask.unRender();
-};
+renderPointTrip(getDataForPointTrip);

@@ -1,38 +1,15 @@
+import {createElement} from "./utils";
+
 export class EditTrip {
   constructor(data) {
-    this._events = data.events;
-    this._element = document.createElement(`div`);
-    this._onSubmit = null;
-  }
-
-  render() {
-    for (let i = 0; i < this._events.length; i++) {
-      this._icon = this._events[i].icon;
-      this._type = this._events[i].type;
-      this._timeStart = this._events[i].time[0];
-      this._timeEnd = this._events[i].time[1];
-      this._price = this._events[i].price;
-      this._description = this._events[i].description;
-      this._picture = this._events[i].picture;
-
-      this._element.innerHTML += this.cardTemplate;
-    }
-    return this._element;
-  }
-
-  _onSubmitButtonClick(evt) {
-    evt.preventDefault();
-    if (typeof this._onSubmit === `function`) {
-      this._onSubmit();
-    }
-  }
-
-  set onSubmit(fn) {
-    this._onSubmit = fn;
-  }
-
-  bind() {
-    this._element.querySelector(`.point__button--save`).addEventListener(`click`, this._onSubmitButtonClick.bind(this));
+    this._icon = data.icon;
+    this._type = data.type;
+    this._timeStart = data.time[0];
+    this._timeEnd = data.time[1];
+    this._price = data.price;
+    this._description = data.description;
+    this._picture = data.picture;
+    this._onEdit = null;
   }
 
   get cardTemplate() {
@@ -147,10 +124,37 @@ export class EditTrip {
             </article>`;
   }
 
-
   get element() {
     return this._element;
   }
 
+  set onSubmit(fn) {
+    this._onSubmit = fn;
+  }
 
+  _onSubmitButtonClick(evt) {
+    evt.preventDefault();
+    if (typeof this._onSubmit === `function`) {
+      this._onSubmit();
+    }
+  }
+
+  bind() {
+    this._element.querySelector(`.point__button--save`).addEventListener(`click`, this._onSubmitButtonClick.bind(this));
+  }
+
+  render() {
+    this._element = createElement(this.cardTemplate);
+    this.bind();
+    return this._element;
+  }
+
+  unbind() {
+    this._element.removeEventListener(`submit`, this._onSubmitButtonClick);
+  }
+
+  unRender() {
+    this.unbind();
+    this._element = null;
+  }
 }

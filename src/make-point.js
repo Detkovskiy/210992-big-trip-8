@@ -1,10 +1,16 @@
-export class Trip {
-  constructor(data) {
-    this._events = data.events;
-    this._element = document.createElement(`div`);
-    this._onEdit = null;
-  }
+import {createElement} from '../src/utils';
 
+export class PointTrip {
+  constructor(data) {
+    this._icon = data.icon;
+    this._type = data.type;
+    this._timeStart = data.time[0];
+    this._timeEnd = data.time[1];
+    this._price = data.price;
+    this._offers = data.offers;
+    this._onEdit = null;
+    this._element = null;
+  }
 
   get cardTemplate() {
     return `<article class="trip-point">
@@ -24,6 +30,10 @@ export class Trip {
             </article>`;
   }
 
+  get element() {
+    return this._element;
+  }
+
   set onEdit(fn) {
     this._onEdit = fn;
   }
@@ -35,28 +45,21 @@ export class Trip {
   }
 
   bind() {
-    this._element.querySelector(`.trip-point`).addEventListener(`click`, this._onEditButtonClick.bind(this));
+    this._element.addEventListener(`click`, this._onEditButtonClick.bind(this));
   }
 
   render() {
-    for (let i = 0; i < this._events.length; i++) {
-      this._icon = this._events[i].icon;
-      this._type = this._events[i].type;
-      this._timeStart = this._events[i].time[0];
-      this._timeEnd = this._events[i].time[1];
-      this._price = this._events[i].price;
-      this._offers = this._events[i].offers;
-
-      this._element.innerHTML += this.cardTemplate;
-      this.bind();
-    }
+    this._element = createElement(this.cardTemplate);
+    this.bind();
     return this._element;
   }
 
-  get element() {
-    return this._element;
+  unbind() {
+    this._element.removeEventListener(`submit`, this._onEditButtonClick);
   }
+
   unRender() {
+    this.unbind();
     this._element = null;
   }
 }
