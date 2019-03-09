@@ -18,9 +18,16 @@ const getRandomDescription = (count, text) => {
   return getRandomArr(count, arrStroke).join(`. `);
 };
 
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+  return newElement.firstChild;
+};
+
+
 /* Функция отрисовки контента */
 const render = (root, content) => {
   root.innerHTML = content;
 };
 
-export {getRandomFromInterval, getRandomArr, getRandomDescription, render};
+export {getRandomFromInterval, getRandomArr, getRandomDescription, createElement, render};
