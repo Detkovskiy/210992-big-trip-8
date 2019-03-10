@@ -23,10 +23,10 @@ export class PointTrip extends Component {
               </p>
               <p class="trip-point__price">€ ${this._price}</p>
               <ul class="trip-point__offers">
-              ${[...this._offers].map((it) => `
+              ${Object.entries(this._offers).map(([offer, checked]) => `${checked ? `
                 <li>
-                  <button class="trip-point__offer">${it}</button>
-                </li>`).join(``)}
+                  <button class="trip-point__offer">${offer}</button>
+                </li>` : ``}`).join(``)}
               </ul>
             </article>`;
   }

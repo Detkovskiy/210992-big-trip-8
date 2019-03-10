@@ -1,7 +1,7 @@
 import {renderFilter} from '../src/make-filter.js';
 import {PointTrip} from './make-point.js';
 import {EditTrip} from './pointEdit';
-import {render} from '../src/utils.js';
+import {render, getRandomFromInterval} from '../src/utils.js';
 import {getTrips} from '../src/data.js';
 
 const tripFilter = document.querySelector(`.trip-filter`);
@@ -54,3 +54,13 @@ const renderPointTrip = (data) => {
 };
 
 renderPointTrip(getDataForPointTrip);
+
+const randomObj = (count, obj) => {
+  const newObj = {};
+
+  for (let i = 0; i < count; i++) {
+    arrTags.push(arr[i]);
+  }
+
+  return arrTags;
+};
