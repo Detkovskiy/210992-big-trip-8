@@ -10,7 +10,7 @@ export class EditTrip extends Component {
     this._price = data.price;
     this._description = data.description;
     this._picture = data.picture;
-    this._onEdit = null;
+    this._onSubmit = null;
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
   }
 
@@ -143,6 +143,6 @@ export class EditTrip extends Component {
 
 
   unbind() {
-    this._element.removeEventListener(`submit`, this._onSubmitButtonClick);
+    this._element.querySelector(`.point__button--save`).removeEventListener(`submit`, this._onSubmitButtonClick);
   }
 }
