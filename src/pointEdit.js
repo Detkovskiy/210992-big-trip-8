@@ -11,6 +11,7 @@ export class EditTrip extends Component {
     this._description = data.description;
     this._picture = data.picture;
     this._onSubmit = null;
+    this._offers = data.offers;
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
   }
 
@@ -90,6 +91,7 @@ export class EditTrip extends Component {
                   <section class="point__offers">
                     <h3 class="point__details-title">offers</h3>
             
+                    
                     <div class="point__offers-wrap">
                       <input class="point__offers-input visually-hidden" type="checkbox" id="add-luggage" name="offer" value="add-luggage">
                       <label for="add-luggage" class="point__offers-label">
