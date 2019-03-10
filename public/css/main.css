@@ -357,6 +357,9 @@ input[type=radio]:checked + .trip-sorting__item {
   opacity: 1;
 }
 
+.trip-point__offer:first-letter {
+  text-transform: uppercase;
+}
 .visually-hidden {
   position: absolute !important;
   clip: rect(1px 1px 1px 1px);
