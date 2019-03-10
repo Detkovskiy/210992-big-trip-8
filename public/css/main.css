@@ -563,6 +563,9 @@ input[type=radio]:checked + .trip-sorting__item {
 .point__offer-service {
   padding-right: 5px;
 }
+.point__offer-service:first-letter {
+  text-transform: uppercase;
+}
 
 .travel-way__label {
   display: inline-flex;
