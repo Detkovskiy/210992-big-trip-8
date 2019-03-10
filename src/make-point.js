@@ -1,7 +1,8 @@
-import {createElement} from '../src/utils';
+import {Component} from '../src/component';
 
-export class PointTrip {
+export class PointTrip extends Component {
   constructor(data) {
+    super();
     this._icon = data.icon;
     this._type = data.type;
     this._timeStart = data.time[0];
@@ -9,7 +10,7 @@ export class PointTrip {
     this._price = data.price;
     this._offers = data.offers;
     this._onEdit = null;
-    this._element = null;
+    this._onEditButtonClick = this._onEditButtonClick.bind(this);
   }
 
   get cardTemplate() {
@@ -30,10 +31,6 @@ export class PointTrip {
             </article>`;
   }
 
-  get element() {
-    return this._element;
-  }
-
   set onEdit(fn) {
     this._onEdit = fn;
   }
@@ -45,21 +42,11 @@ export class PointTrip {
   }
 
   bind() {
-    this._element.addEventListener(`click`, this._onEditButtonClick.bind(this));
-  }
-
-  render() {
-    this._element = createElement(this.cardTemplate);
-    this.bind();
-    return this._element;
+    this._element.addEventListener(`click`, this._onEditButtonClick);
   }
 
   unbind() {
-    this._element.removeEventListener(`submit`, this._onEditButtonClick);
+    this._element.removeEventListener(`click`, this._onEditButtonClick);
   }
 
-  unRender() {
-    this.unbind();
-    this._element = null;
-  }
 }

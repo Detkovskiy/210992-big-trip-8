@@ -1,7 +1,8 @@
-import {createElement} from "./utils";
+import {Component} from '../src/component';
 
-export class EditTrip {
+export class EditTrip extends Component {
   constructor(data) {
+    super();
     this._icon = data.icon;
     this._type = data.type;
     this._timeStart = data.time[0];
@@ -10,6 +11,7 @@ export class EditTrip {
     this._description = data.description;
     this._picture = data.picture;
     this._onEdit = null;
+    this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
   }
 
   get cardTemplate() {
@@ -124,10 +126,6 @@ export class EditTrip {
             </article>`;
   }
 
-  get element() {
-    return this._element;
-  }
-
   set onSubmit(fn) {
     this._onSubmit = fn;
   }
@@ -140,21 +138,11 @@ export class EditTrip {
   }
 
   bind() {
-    this._element.querySelector(`.point__button--save`).addEventListener(`click`, this._onSubmitButtonClick.bind(this));
+    this._element.querySelector(`.point__button--save`).addEventListener(`submit`, this._onSubmitButtonClick);
   }
 
-  render() {
-    this._element = createElement(this.cardTemplate);
-    this.bind();
-    return this._element;
-  }
 
   unbind() {
     this._element.removeEventListener(`submit`, this._onSubmitButtonClick);
-  }
-
-  unRender() {
-    this.unbind();
-    this._element = null;
   }
 }
