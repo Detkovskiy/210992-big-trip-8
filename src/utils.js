@@ -24,7 +24,6 @@ const createElement = (template) => {
   return newElement.firstChild;
 };
 
-
 /* Функция отрисовки контента */
 const render = (root, content) => {
   root.innerHTML = content;

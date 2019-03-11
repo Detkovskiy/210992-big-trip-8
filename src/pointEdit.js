@@ -1,7 +1,8 @@
-import {createElement} from "./utils";
+import {Component} from '../src/component';
 
-export class EditTrip {
+export class EditTrip extends Component {
   constructor(data) {
+    super();
     this._icon = data.icon;
     this._type = data.type;
     this._timeStart = data.time[0];
@@ -9,7 +10,9 @@ export class EditTrip {
     this._price = data.price;
     this._description = data.description;
     this._picture = data.picture;
-    this._onEdit = null;
+    this._onSubmit = null;
+    this._offers = data.offers;
+    this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
   }
 
   get cardTemplate() {
@@ -87,27 +90,12 @@ export class EditTrip {
                 <section class="point__details">
                   <section class="point__offers">
                     <h3 class="point__details-title">offers</h3>
-            
-                    <div class="point__offers-wrap">
-                      <input class="point__offers-input visually-hidden" type="checkbox" id="add-luggage" name="offer" value="add-luggage">
-                      <label for="add-luggage" class="point__offers-label">
-                        <span class="point__offer-service">Add luggage</span> + €<span class="point__offer-price">30</span>
-                      </label>
-            
-                      <input class="point__offers-input visually-hidden" type="checkbox" id="switch-to-comfort-class" name="offer" value="switch-to-comfort-class">
-                      <label for="switch-to-comfort-class" class="point__offers-label">
-                        <span class="point__offer-service">Switch to comfort class</span> + €<span class="point__offer-price">100</span>
-                      </label>
-            
-                      <input class="point__offers-input visually-hidden" type="checkbox" id="add-meal" name="offer" value="add-meal">
-                      <label for="add-meal" class="point__offers-label">
-                        <span class="point__offer-service">Add meal </span> + €<span class="point__offer-price">15</span>
-                      </label>
-            
-                      <input class="point__offers-input visually-hidden" type="checkbox" id="choose-seats" name="offer" value="choose-seats">
-                      <label for="choose-seats" class="point__offers-label">
-                        <span class="point__offer-service">Choose seats</span> + €<span class="point__offer-price">5</span>
-                      </label>
+                      <div class="point__offers-wrap">
+                        ${Object.entries(this._offers).map(([offer, checked]) => ` 
+                          <input class="point__offers-input visually-hidden" type="checkbox" id="${offer.replace(/ /g, `-`)}" name="offer" value="${offer.replace(/ /g, `-`)}" ${checked ? `checked` : ``}>
+                          <label for="${offer.replace(/ /g, `-`)}" class="point__offers-label">
+                            <span class="point__offer-service">${offer}</span> + €<span class="point__offer-price">30</span>
+                          </label>`).join(``)}
                     </div>
             
                   </section>
@@ -124,10 +112,6 @@ export class EditTrip {
             </article>`;
   }
 
-  get element() {
-    return this._element;
-  }
-
   set onSubmit(fn) {
     this._onSubmit = fn;
   }
@@ -140,21 +124,11 @@ export class EditTrip {
   }
 
   bind() {
-    this._element.querySelector(`.point__button--save`).addEventListener(`click`, this._onSubmitButtonClick.bind(this));
+    this._element.querySelector(`.point__button--save`).addEventListener(`submit`, this._onSubmitButtonClick);
   }
 
-  render() {
-    this._element = createElement(this.cardTemplate);
-    this.bind();
-    return this._element;
-  }
 
   unbind() {
-    this._element.removeEventListener(`submit`, this._onSubmitButtonClick);
-  }
-
-  unRender() {
-    this.unbind();
-    this._element = null;
+    this._element.querySelector(`.point__button--save`).removeEventListener(`submit`, this._onSubmitButtonClick);
   }
 }
