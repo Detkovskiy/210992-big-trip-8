@@ -131,13 +131,14 @@ export class EditTrip extends Component {
       },
       offer: (value) => {
         target.offers[value] = true;
-      },
+      }
     };
   }
 
   static processForm(formData) {
     const entry = {
       price: null,
+      time: ``,
       offers: {
         'add-luggage': false,
         'switch-to-comfort-class': false,
@@ -150,7 +151,7 @@ export class EditTrip extends Component {
 
     for (const pair of formData.entries()) {
       const [property, value] = pair;
-      //console.log(pair);
+      console.log(pair);
       if (taskEditMapper[property]) {
         taskEditMapper[property](value);
       }

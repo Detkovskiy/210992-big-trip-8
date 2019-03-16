@@ -10,7 +10,7 @@ export const getTrips = () => ({
   ],
   events: [
     {
-      'type': `Taxi`,
+      'type': `taxi`,
       'icon': `🚕`,
       'price': getRandomFromInterval(5, 100),
       'time': [getRandomFromInterval(0, 10), getRandomFromInterval(10, 24)],
@@ -23,7 +23,7 @@ export const getTrips = () => ({
       'description': getRandomDescription(getRandomFromInterval(1, 4), textDescription),
       'picture': `//picsum.photos/100/100?r=${Math.random()}`},
     {
-      'type': `Flight`,
+      'type': `flight`,
       'icon': `✈️`,
       'price': getRandomFromInterval(5, 300),
       'time': [getRandomFromInterval(0, 10), getRandomFromInterval(10, 24)],
@@ -36,7 +36,7 @@ export const getTrips = () => ({
       'description': getRandomDescription(getRandomFromInterval(1, 4), textDescription),
       'picture': `//picsum.photos/100/100?r=${Math.random()}`},
     {
-      'type': `Drive`,
+      'type': `drive`,
       'icon': `🚗`,
       'price': getRandomFromInterval(10, 150),
       'time': [getRandomFromInterval(0, 10), getRandomFromInterval(10, 24)],
@@ -49,7 +49,7 @@ export const getTrips = () => ({
       'description': getRandomDescription(getRandomFromInterval(1, 4), textDescription),
       'picture': `//picsum.photos/100/100?r=${Math.random()}`},
     {
-      'type': `Check-in`,
+      'type': `check-in`,
       'icon': `🏨`,
       'price': getRandomFromInterval(200, 400),
       'time': [getRandomFromInterval(0, 10), getRandomFromInterval(10, 24)],
