@@ -4,7 +4,6 @@ import {moment} from '../src/utils';
 export class PointTrip extends Component {
   constructor(data) {
     super();
-    this._icon = data.icon;
     this._type = data.type;
     this._timeStart = data.time[0];
     this._timeEnd = data.time[1];
@@ -16,7 +15,7 @@ export class PointTrip extends Component {
 
   get cardTemplate() {
     return `<article class="trip-point">
-              <i class="trip-icon">${this._icon}</i>
+              <i class="trip-icon"> ${this._icons[this._type]}️</i>
               <h3 class="trip-point__title">${this._type}</h3>
               <p class="trip-point__schedule">
                 <span class="trip-point__timetable">${this._timeStart}:00 — ${this._timeEnd}:00</span>
@@ -26,7 +25,7 @@ export class PointTrip extends Component {
               <ul class="trip-point__offers">
               ${Object.entries(this._offers).map(([offer, checked]) => `${checked ? `
                 <li>
-                  <button class="trip-point__offer">${offer}</button>
+                  <button class="trip-point__offer">${offer.replace(/-/g, ` `)}</button>
                 </li>` : ``}`).join(``)}
               </ul>
             </article>`;
@@ -54,7 +53,6 @@ export class PointTrip extends Component {
   update(data) {
     this._price = data.price;
     this._offers = data.offers;
-
-
+    this._type = data.type;
   }
 }

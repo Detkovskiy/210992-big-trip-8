@@ -627,3 +627,7 @@ input[type=radio]:checked + .trip-sorting__item {
 .travel-way__toggle:checked + .travel-way__select {
   display: block;
 }
+.trip-point__title:first-letter,
+.point__destination-label:first-letter {
+  text-transform: uppercase;
+}

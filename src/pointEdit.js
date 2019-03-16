@@ -6,7 +6,6 @@ import {moment} from '../src/utils';
 export class EditTrip extends Component {
   constructor(data) {
     super();
-    this._icon = data.icon;
     this._type = data.type;
     this._timeStart = data.time[0];
     this._timeEnd = data.time[1];
@@ -28,32 +27,21 @@ export class EditTrip extends Component {
                   </label>
             
                   <div class="travel-way">
-                    <label class="travel-way__label" for="travel-way__toggle">${this._icon}️</label>
+                    <label class="travel-way__label" for="travel-way__toggle">${this._icons[this._type]}️</label>
             
                     <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
             
                     <div class="travel-way__select">
                       <div class="travel-way__select-group">
-                        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-taxi" name="travel-way" value="taxi">
-                        <label class="travel-way__select-label" for="travel-way-taxi">🚕 taxi</label>
-            
-                        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-bus" name="travel-way" value="bus">
-                        <label class="travel-way__select-label" for="travel-way-bus">🚌 bus</label>
-            
-                        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-train" name="travel-way" value="train">
-                        <label class="travel-way__select-label" for="travel-way-train">🚂 train</label>
-            
-                        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-flight" name="travel-way" value="train" checked>
-                        <label class="travel-way__select-label" for="travel-way-flight">✈️ flight</label>
+                        ${Object.entries(this._icons).map(([typePoint, icon]) => ` 
+                        
+                          <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${typePoint}" name="travel-way" value="${typePoint}" ${typePoint === this._type ? `checked` : ``}>
+                           <label class="travel-way__select-label" for="travel-way-${typePoint}">${icon} ${typePoint}</label>
+                        
+                         `).join(``)}
+                        
                       </div>
-            
-                      <div class="travel-way__select-group">
-                        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-check-in" name="travel-way" value="check-in">
-                        <label class="travel-way__select-label" for="travel-way-check-in">🏨 check-in</label>
-            
-                        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-sightseeing" name="travel-way" value="sight-seeing">
-                        <label class="travel-way__select-label" for="travel-way-sightseeing">🏛 sightseeing</label>
-                      </div>
+                     
                     </div>
                   </div>
             
@@ -97,7 +85,7 @@ export class EditTrip extends Component {
                         ${Object.entries(this._offers).map(([offer, checked]) => ` 
                           <input class="point__offers-input visually-hidden" type="checkbox" id="${offer.replace(/ /g, `-`)}" name="offer" value="${offer.replace(/ /g, `-`)}" ${checked ? `checked` : ``}>
                           <label for="${offer.replace(/ /g, `-`)}" class="point__offers-label">
-                            <span class="point__offer-service">${offer}</span> + €<span class="point__offer-price">30</span>
+                            <span class="point__offer-service">${offer.replace(/-/g, ` `)}</span> + €<span class="point__offer-price">30</span>
                           </label>`).join(``)}
                     </div>
             
@@ -122,16 +110,20 @@ export class EditTrip extends Component {
   update(data) {
     this._price = data.price;
     this._offers = data.offers;
+    this._type = data.type;
   }
 
   static createMapper(target) {
     return {
-      price: (value) => {
+      'price': (value) => {
         target.price = value;
       },
-      offer: (value) => {
+      'offer': (value) => {
         target.offers[value] = true;
-      }
+      },
+      'travel-way': (value) => {
+        target.type = value;
+      },
     };
   }
 
@@ -151,13 +143,12 @@ export class EditTrip extends Component {
 
     for (const pair of formData.entries()) {
       const [property, value] = pair;
-      console.log(pair);
+
       if (taskEditMapper[property]) {
         taskEditMapper[property](value);
       }
     }
 
-    //console.log(entry);
     return entry;
   }
 
