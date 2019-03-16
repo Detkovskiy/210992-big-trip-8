@@ -42,7 +42,12 @@ const renderPointTrip = (data) => {
       pointTrip.unRender();
     };
 
-    editPointTrip.onSubmit = () => {
+    editPointTrip.onSubmit = (newObject) => {
+      console.log(newObject);
+
+      getDataForPointTrip.events.price = newObject.price;
+
+      pointTrip.update(getDataForPointTrip.events);
       pointTrip.render();
       tripItems.replaceChild(pointTrip.element, editPointTrip.element);
       editPointTrip.unRender();

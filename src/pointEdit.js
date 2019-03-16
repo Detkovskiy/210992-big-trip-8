@@ -1,4 +1,7 @@
 import {Component} from '../src/component';
+import flatpickr from 'flatpickr';
+import {moment} from '../src/utils';
+
 
 export class EditTrip extends Component {
   constructor(data) {
@@ -17,7 +20,7 @@ export class EditTrip extends Component {
 
   get cardTemplate() {
     return `<article class="point">
-              <form action="" method="get">
+              <form action="" method="get" class="editPoint">
                 <header class="point__header">
                   <label class="point__date">
                     choose day
@@ -112,23 +115,63 @@ export class EditTrip extends Component {
             </article>`;
   }
 
+
+
+
   set onSubmit(fn) {
     this._onSubmit = fn;
   }
 
-  _onSubmitButtonClick(evt) {
-    evt.preventDefault();
-    if (typeof this._onSubmit === `function`) {
-      this._onSubmit();
+  update(data) {
+    this._price = data.price;
+  }
+
+  static createMapper(target) {
+    return {
+      price: (value) => {
+        target.price = value;
+      }
+    };
+  }
+
+  static processForm(formData) {
+    const entry = {
+      price: null,
+    };
+
+    const taskEditMapper = EditTrip.createMapper(entry);
+
+    for (const pair of formData.entries()) {
+      const [property, value] = pair;
+      console.log(pair);
+      if (taskEditMapper[property]) {
+        taskEditMapper[property](value);
+      }
     }
+
+    return entry;
+  }
+
+  _onSubmitButtonClick(evt) {
+
+    evt.preventDefault();
+
+    const formData = new FormData(this._element.querySelector(`.editPoint`));
+    const newData = EditTrip.processForm(formData);
+
+    if (typeof this._onSubmit === `function`) {
+      this._onSubmit(newData);
+    }
+
+    this.update(newData);
   }
 
   bind() {
-    this._element.querySelector(`.point__button--save`).addEventListener(`submit`, this._onSubmitButtonClick);
+    this._element.querySelector(`.point__button--save`).addEventListener(`click`, this._onSubmitButtonClick);
   }
 
 
   unbind() {
-    this._element.querySelector(`.point__button--save`).removeEventListener(`submit`, this._onSubmitButtonClick);
+    this._element.querySelector(`.point__button--save`).removeEventListener(`click`, this._onSubmitButtonClick);
   }
 }

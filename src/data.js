@@ -18,7 +18,7 @@ export const getTrips = () => ({
         'add luggage': getRandomFromInterval(0, 2),
         'switch to comfort class': getRandomFromInterval(0, 2),
         'add meal': getRandomFromInterval(0, 2),
-        'Choose seats': getRandomFromInterval(0, 2)
+        'choose seats': getRandomFromInterval(0, 2)
       },
       'description': getRandomDescription(getRandomFromInterval(1, 4), textDescription),
       'picture': `//picsum.photos/100/100?r=${Math.random()}`},
@@ -31,7 +31,7 @@ export const getTrips = () => ({
         'add luggage': getRandomFromInterval(0, 2),
         'switch to comfort class': getRandomFromInterval(0, 2),
         'add meal': getRandomFromInterval(0, 2),
-        'Choose seats': getRandomFromInterval(0, 2)
+        'choose seats': getRandomFromInterval(0, 2)
       },
       'description': getRandomDescription(getRandomFromInterval(1, 4), textDescription),
       'picture': `//picsum.photos/100/100?r=${Math.random()}`},
@@ -44,7 +44,7 @@ export const getTrips = () => ({
         'add luggage': getRandomFromInterval(0, 2),
         'switch to comfort class': getRandomFromInterval(0, 2),
         'add meal': getRandomFromInterval(0, 2),
-        'Choose seats': getRandomFromInterval(0, 2)
+        'choose seats': getRandomFromInterval(0, 2)
       },
       'description': getRandomDescription(getRandomFromInterval(1, 4), textDescription),
       'picture': `//picsum.photos/100/100?r=${Math.random()}`},
@@ -57,7 +57,7 @@ export const getTrips = () => ({
         'add luggage': getRandomFromInterval(0, 2),
         'switch to comfort class': getRandomFromInterval(0, 2),
         'add meal': getRandomFromInterval(0, 2),
-        'Choose seats': getRandomFromInterval(0, 2)
+        'choose seats': getRandomFromInterval(0, 2)
       },
       'description': getRandomDescription(getRandomFromInterval(1, 4), textDescription),
       'picture': `//picsum.photos/100/100?r=${Math.random()}`}],

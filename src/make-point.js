@@ -1,4 +1,5 @@
 import {Component} from '../src/component';
+import {moment} from '../src/utils';
 
 export class PointTrip extends Component {
   constructor(data) {
@@ -36,6 +37,7 @@ export class PointTrip extends Component {
   }
 
   _onEditButtonClick() {
+
     if (typeof this._onEdit === `function`) {
       this._onEdit();
     }
@@ -49,4 +51,9 @@ export class PointTrip extends Component {
     this._element.removeEventListener(`click`, this._onEditButtonClick);
   }
 
+  update(data) {
+    this._price = data.price;
+
+
+  }
 }
