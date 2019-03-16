@@ -115,40 +115,48 @@ export class EditTrip extends Component {
             </article>`;
   }
 
-
-
-
   set onSubmit(fn) {
     this._onSubmit = fn;
   }
 
   update(data) {
     this._price = data.price;
+    this._offers = data.offers;
   }
 
   static createMapper(target) {
     return {
       price: (value) => {
         target.price = value;
-      }
+      },
+      offer: (value) => {
+        target.offers[value] = true;
+      },
     };
   }
 
   static processForm(formData) {
     const entry = {
       price: null,
+      offers: {
+        'add-luggage': false,
+        'switch-to-comfort-class': false,
+        'add-meal': false,
+        'choose-seats': false
+      }
     };
 
     const taskEditMapper = EditTrip.createMapper(entry);
 
     for (const pair of formData.entries()) {
       const [property, value] = pair;
-      console.log(pair);
+      //console.log(pair);
       if (taskEditMapper[property]) {
         taskEditMapper[property](value);
       }
     }
 
+    //console.log(entry);
     return entry;
   }
 

@@ -53,6 +53,7 @@ export class PointTrip extends Component {
 
   update(data) {
     this._price = data.price;
+    this._offers = data.offers;
 
 
   }
