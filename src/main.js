@@ -47,6 +47,7 @@ const renderPointTrip = (data) => {
       getDataForPointTrip.events.offers = newObject.offers;
       getDataForPointTrip.events.price = newObject.price;
       getDataForPointTrip.events.type = newObject.type;
+      getDataForPointTrip.events.time = newObject.time;
 
       pointTrip.update(getDataForPointTrip.events);
       pointTrip.render();

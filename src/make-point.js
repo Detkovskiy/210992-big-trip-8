@@ -1,5 +1,5 @@
 import {Component} from '../src/component';
-import {moment} from '../src/utils';
+import moment from '../node_modules/moment/moment.js';
 
 export class PointTrip extends Component {
   constructor(data) {
@@ -18,7 +18,7 @@ export class PointTrip extends Component {
               <i class="trip-icon"> ${this._icons[this._type]}️</i>
               <h3 class="trip-point__title">${this._type}</h3>
               <p class="trip-point__schedule">
-                <span class="trip-point__timetable">${this._timeStart}:00 — ${this._timeEnd}:00</span>
+                <span class="trip-point__timetable">${moment(this._timeStart).format(`HH:mm`)} — ${moment(this._timeEnd).format(`HH:mm`)}</span>
                 <span class="trip-point__duration">1h 30m</span>
               </p>
               <p class="trip-point__price">€ ${this._price}</p>
@@ -54,5 +54,7 @@ export class PointTrip extends Component {
     this._price = data.price;
     this._offers = data.offers;
     this._type = data.type;
+    this._timeStart = data.time[0];
+    this._timeEnd = data.time[1];
   }
 }

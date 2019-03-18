@@ -1,6 +1,4 @@
 const getRandomFromInterval = (min, max) => Math.floor(Math.random() * (max - min) + min);
-const moment = require(`moment`);
-
 
 const getRandomArr = (count, arr) => {
   const randomArr = [];
@@ -30,4 +28,4 @@ const render = (root, content) => {
   root.innerHTML = content;
 };
 
-export {getRandomFromInterval, getRandomArr, getRandomDescription, createElement, moment, render};
+export {getRandomFromInterval, getRandomArr, getRandomDescription, createElement, render};

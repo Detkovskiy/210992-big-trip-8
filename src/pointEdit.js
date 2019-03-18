@@ -1,6 +1,6 @@
 import {Component} from '../src/component';
 import flatpickr from 'flatpickr';
-import {moment} from '../src/utils';
+import moment from '../node_modules/moment/moment.js';
 
 
 export class EditTrip extends Component {
@@ -58,7 +58,7 @@ export class EditTrip extends Component {
             
                   <label class="point__time">
                     choose time
-                    <input class="point__input" type="text" value="${this._timeStart}:00 — ${this._timeEnd}:00" name="time" placeholder="00:00 — 00:00">
+                    <input class="point__input" type="text" value="${moment(this._timeStart).format(`HH:mm`)} — ${moment(this._timeEnd).format(`HH:mm`)}" name="time" placeholder="00:00 — 00:00">
                   </label>
             
                   <label class="point__price">
@@ -111,6 +111,8 @@ export class EditTrip extends Component {
     this._price = data.price;
     this._offers = data.offers;
     this._type = data.type;
+    this._timeStart = data.time[0];
+    this._timeEnd = data.time[1];
   }
 
   static createMapper(target) {
@@ -124,6 +126,10 @@ export class EditTrip extends Component {
       'travel-way': (value) => {
         target.type = value;
       },
+      'time': (value) => {
+        const [timeStart, timeEnd] = value.replace(/ — /g, `,`).split(`,`);
+        target.time = [+moment(timeStart, `HH:mm`).format(`x`), +moment(timeEnd, `HH:mm`).format(`x`)];
+      }
     };
   }
 
