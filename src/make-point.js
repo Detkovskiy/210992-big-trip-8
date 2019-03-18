@@ -19,7 +19,7 @@ export class PointTrip extends Component {
               <h3 class="trip-point__title">${this._type}</h3>
               <p class="trip-point__schedule">
                 <span class="trip-point__timetable">${moment(this._timeStart).format(`HH:mm`)} — ${moment(this._timeEnd).format(`HH:mm`)}</span>
-                <span class="trip-point__duration">1h 30m</span>
+                <span class="trip-point__duration">${moment(this._timeEnd).subtract(+moment(this._timeStart).format(`HH`), `hours`).subtract(+moment(this._timeStart).format(`mm`), `minutes`).format(`H[H] m[M]`)}</span>
               </p>
               <p class="trip-point__price">€ ${this._price}</p>
               <ul class="trip-point__offers">

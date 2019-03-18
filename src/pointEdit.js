@@ -1,5 +1,4 @@
 import {Component} from '../src/component';
-import flatpickr from 'flatpickr';
 import moment from '../node_modules/moment/moment.js';
 
 
