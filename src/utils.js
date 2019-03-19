@@ -1,6 +1,5 @@
 const getRandomFromInterval = (min, max) => Math.floor(Math.random() * (max - min) + min);
 
-
 const getRandomArr = (count, arr) => {
   const randomArr = [];
   const sizeArr = arr.length < count ? arr.length : count;

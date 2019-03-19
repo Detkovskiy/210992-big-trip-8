@@ -1,9 +1,9 @@
 import {Component} from '../src/component';
+import moment from '../node_modules/moment/moment.js';
 
 export class PointTrip extends Component {
   constructor(data) {
     super();
-    this._icon = data.icon;
     this._type = data.type;
     this._timeStart = data.time[0];
     this._timeEnd = data.time[1];
@@ -15,17 +15,17 @@ export class PointTrip extends Component {
 
   get cardTemplate() {
     return `<article class="trip-point">
-              <i class="trip-icon">${this._icon}</i>
+              <i class="trip-icon"> ${this._icons[this._type]}️</i>
               <h3 class="trip-point__title">${this._type}</h3>
               <p class="trip-point__schedule">
-                <span class="trip-point__timetable">${this._timeStart}:00 — ${this._timeEnd}:00</span>
-                <span class="trip-point__duration">1h 30m</span>
+                <span class="trip-point__timetable">${moment(this._timeStart).format(`HH:mm`)} — ${moment(this._timeEnd).format(`HH:mm`)}</span>
+                <span class="trip-point__duration">${moment(this._timeEnd).subtract(+moment(this._timeStart).format(`HH`), `hours`).subtract(+moment(this._timeStart).format(`mm`), `minutes`).format(`H[H] m[M]`)}</span>
               </p>
               <p class="trip-point__price">€ ${this._price}</p>
               <ul class="trip-point__offers">
               ${Object.entries(this._offers).map(([offer, checked]) => `${checked ? `
                 <li>
-                  <button class="trip-point__offer">${offer}</button>
+                  <button class="trip-point__offer">${offer.replace(/-/g, ` `)}</button>
                 </li>` : ``}`).join(``)}
               </ul>
             </article>`;
@@ -36,6 +36,7 @@ export class PointTrip extends Component {
   }
 
   _onEditButtonClick() {
+
     if (typeof this._onEdit === `function`) {
       this._onEdit();
     }
@@ -49,4 +50,11 @@ export class PointTrip extends Component {
     this._element.removeEventListener(`click`, this._onEditButtonClick);
   }
 
+  update(data) {
+    this._price = data.price;
+    this._offers = data.offers;
+    this._type = data.type;
+    this._timeStart = data.time[0];
+    this._timeEnd = data.time[1];
+  }
 }

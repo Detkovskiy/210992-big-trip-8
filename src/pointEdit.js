@@ -1,9 +1,10 @@
 import {Component} from '../src/component';
+import moment from '../node_modules/moment/moment.js';
+
 
 export class EditTrip extends Component {
   constructor(data) {
     super();
-    this._icon = data.icon;
     this._type = data.type;
     this._timeStart = data.time[0];
     this._timeEnd = data.time[1];
@@ -17,7 +18,7 @@ export class EditTrip extends Component {
 
   get cardTemplate() {
     return `<article class="point">
-              <form action="" method="get">
+              <form action="" method="get" class="editPoint">
                 <header class="point__header">
                   <label class="point__date">
                     choose day
@@ -25,32 +26,21 @@ export class EditTrip extends Component {
                   </label>
             
                   <div class="travel-way">
-                    <label class="travel-way__label" for="travel-way__toggle">${this._icon}️</label>
+                    <label class="travel-way__label" for="travel-way__toggle">${this._icons[this._type]}️</label>
             
                     <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
             
                     <div class="travel-way__select">
                       <div class="travel-way__select-group">
-                        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-taxi" name="travel-way" value="taxi">
-                        <label class="travel-way__select-label" for="travel-way-taxi">🚕 taxi</label>
-            
-                        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-bus" name="travel-way" value="bus">
-                        <label class="travel-way__select-label" for="travel-way-bus">🚌 bus</label>
-            
-                        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-train" name="travel-way" value="train">
-                        <label class="travel-way__select-label" for="travel-way-train">🚂 train</label>
-            
-                        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-flight" name="travel-way" value="train" checked>
-                        <label class="travel-way__select-label" for="travel-way-flight">✈️ flight</label>
+                        ${Object.entries(this._icons).map(([typePoint, icon]) => ` 
+                        
+                          <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${typePoint}" name="travel-way" value="${typePoint}" ${typePoint === this._type ? `checked` : ``}>
+                           <label class="travel-way__select-label" for="travel-way-${typePoint}">${icon} ${typePoint}</label>
+                        
+                         `).join(``)}
+                        
                       </div>
-            
-                      <div class="travel-way__select-group">
-                        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-check-in" name="travel-way" value="check-in">
-                        <label class="travel-way__select-label" for="travel-way-check-in">🏨 check-in</label>
-            
-                        <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-sightseeing" name="travel-way" value="sight-seeing">
-                        <label class="travel-way__select-label" for="travel-way-sightseeing">🏛 sightseeing</label>
-                      </div>
+                     
                     </div>
                   </div>
             
@@ -67,7 +57,7 @@ export class EditTrip extends Component {
             
                   <label class="point__time">
                     choose time
-                    <input class="point__input" type="text" value="${this._timeStart}:00 — ${this._timeEnd}:00" name="time" placeholder="00:00 — 00:00">
+                    <input class="point__input" type="text" value="${moment(this._timeStart).format(`HH:mm`)} — ${moment(this._timeEnd).format(`HH:mm`)}" name="time" placeholder="00:00 — 00:00">
                   </label>
             
                   <label class="point__price">
@@ -94,7 +84,7 @@ export class EditTrip extends Component {
                         ${Object.entries(this._offers).map(([offer, checked]) => ` 
                           <input class="point__offers-input visually-hidden" type="checkbox" id="${offer.replace(/ /g, `-`)}" name="offer" value="${offer.replace(/ /g, `-`)}" ${checked ? `checked` : ``}>
                           <label for="${offer.replace(/ /g, `-`)}" class="point__offers-label">
-                            <span class="point__offer-service">${offer}</span> + €<span class="point__offer-price">30</span>
+                            <span class="point__offer-service">${offer.replace(/-/g, ` `)}</span> + €<span class="point__offer-price">30</span>
                           </label>`).join(``)}
                     </div>
             
@@ -116,19 +106,77 @@ export class EditTrip extends Component {
     this._onSubmit = fn;
   }
 
-  _onSubmitButtonClick(evt) {
-    evt.preventDefault();
-    if (typeof this._onSubmit === `function`) {
-      this._onSubmit();
+  update(data) {
+    this._price = data.price;
+    this._offers = data.offers;
+    this._type = data.type;
+    this._timeStart = data.time[0];
+    this._timeEnd = data.time[1];
+  }
+
+  static createMapper(target) {
+    return {
+      'price': (value) => {
+        target.price = value;
+      },
+      'offer': (value) => {
+        target.offers[value] = true;
+      },
+      'travel-way': (value) => {
+        target.type = value;
+      },
+      'time': (value) => {
+        const [timeStart, timeEnd] = value.replace(/ — /g, `,`).split(`,`);
+        target.time = [+moment(timeStart, `HH:mm`).format(`x`), +moment(timeEnd, `HH:mm`).format(`x`)];
+      }
+    };
+  }
+
+  static processForm(formData) {
+    const entry = {
+      price: null,
+      time: ``,
+      offers: {
+        'add-luggage': false,
+        'switch-to-comfort-class': false,
+        'add-meal': false,
+        'choose-seats': false
+      }
+    };
+
+    const taskEditMapper = EditTrip.createMapper(entry);
+
+    for (const pair of formData.entries()) {
+      const [property, value] = pair;
+
+      if (taskEditMapper[property]) {
+        taskEditMapper[property](value);
+      }
     }
+
+    return entry;
+  }
+
+  _onSubmitButtonClick(evt) {
+
+    evt.preventDefault();
+
+    const formData = new FormData(this._element.querySelector(`.editPoint`));
+    const newData = EditTrip.processForm(formData);
+
+    if (typeof this._onSubmit === `function`) {
+      this._onSubmit(newData);
+    }
+
+    this.update(newData);
   }
 
   bind() {
-    this._element.querySelector(`.point__button--save`).addEventListener(`submit`, this._onSubmitButtonClick);
+    this._element.querySelector(`.point__button--save`).addEventListener(`click`, this._onSubmitButtonClick);
   }
 
 
   unbind() {
-    this._element.querySelector(`.point__button--save`).removeEventListener(`submit`, this._onSubmitButtonClick);
+    this._element.querySelector(`.point__button--save`).removeEventListener(`click`, this._onSubmitButtonClick);
   }
 }

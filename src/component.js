@@ -6,6 +6,16 @@ export class Component {
       throw new Error(`Can't instantiate BaseComponent, only concrete one.`);
     }
 
+    this._icons = {
+      'taxi': `🚕`,
+      'bus': `🚌`,
+      'drive': `🚗`,
+      'train': `🚂`,
+      'flight': `✈️`,
+      'check-in': `🏨`,
+      'sight-seeing': `🏛`
+    };
+
     this._element = null;
     this._state = {};
   }
