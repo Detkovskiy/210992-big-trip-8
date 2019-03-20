@@ -1,5 +1,5 @@
 import {Component} from '../src/component';
-import moment from '../node_modules/moment/moment.js';
+import moment from 'moment';
 
 
 export class EditTrip extends Component {
@@ -57,7 +57,7 @@ export class EditTrip extends Component {
             
                   <label class="point__time">
                     choose time
-                    <input class="point__input" type="text" value="${moment(this._timeStart).format(`HH:mm`)} — ${moment(this._timeEnd).format(`HH:mm`)}" name="time" placeholder="00:00 — 00:00">
+                    <input class="point__input" type="text" value="${moment(this._timeStart, `x`).format(`HH:mm`)} — ${moment(this._timeEnd, `x`).format(`HH:mm`)}" name="time" placeholder="00:00 — 00:00">
                   </label>
             
                   <label class="point__price">
@@ -127,7 +127,7 @@ export class EditTrip extends Component {
       },
       'time': (value) => {
         const [timeStart, timeEnd] = value.replace(/ — /g, `,`).split(`,`);
-        target.time = [+moment(timeStart, `HH:mm`).format(`x`), +moment(timeEnd, `HH:mm`).format(`x`)];
+        target.time = [moment(timeStart, `HH:mm`).format(`x`), moment(timeEnd, `HH:mm`).format(`x`)];
       }
     };
   }
