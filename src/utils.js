@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 const getRandomFromInterval = (min, max) => Math.floor(Math.random() * (max - min) + min);
 
 const getRandomArr = (count, arr) => {
@@ -28,4 +30,27 @@ const render = (root, content) => {
   root.innerHTML = content;
 };
 
-export {getRandomFromInterval, getRandomArr, getRandomDescription, createElement, render};
+/* Временная функция для проверки фильтров. Устанавливает время на 6 утра */
+const getTimeIsNow = () => moment().startOf(`day`).add(6, `hours`).format(`x`);
+
+const filterPoint = (data, filterName) => {
+  let sortData = [];
+  switch (filterName) {
+
+    case `filter-everything`:
+      sortData = data.events;
+      break;
+
+    case `filter-future`:
+
+      sortData = data.events.filter((it) => it.time[0] > getTimeIsNow());
+      break;
+
+    case `filter-past`:
+      sortData = data.events.filter((it) => it.time[0] < getTimeIsNow());
+  }
+  return sortData;
+};
+
+
+export {getRandomFromInterval, getRandomArr, getRandomDescription, createElement, getTimeIsNow, filterPoint, render};

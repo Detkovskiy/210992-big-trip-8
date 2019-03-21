@@ -1,39 +1,25 @@
-import {renderFilter} from '../src/make-filter.js';
 import {PointTrip} from './make-point.js';
 import {EditTrip} from './pointEdit';
-import {render} from '../src/utils.js';
-import {getTrips} from '../src/data.js';
+import {Filter} from './filter';
+import {getTimeIsNow, filterPoint} from '../src/utils.js';
+import {getTrips, filtersName} from '../src/data.js';
+import moment from 'moment';
 
 const tripFilter = document.querySelector(`.trip-filter`);
 const tripItems = document.querySelector(`.trip-day__items`);
-
-
-const filtersName = [
-  {
-    label: `everything`,
-    checked: true,
-  },
-  {
-    label: `future`,
-  },
-  {
-    label: `past`,
-  }
-];
-
-render(tripFilter, renderFilter(filtersName));
+const dataNow = document.querySelector(`.trip-day__title`);
 
 const getDataForPointTrip = getTrips();
 
 const renderPointTrip = (data) => {
-
+  tripItems.innerHTML = ``;
   const fragment = document.createDocumentFragment();
 
-  for (const it of data.events) {
+  for (const it of data) {
 
     const pointTrip = new PointTrip(it);
-    const editPointTrip = new EditTrip(it);
 
+    const editPointTrip = new EditTrip(it);
     fragment.appendChild(pointTrip.render());
 
     pointTrip.onEdit = () => {
@@ -60,4 +46,17 @@ const renderPointTrip = (data) => {
 
 };
 
-renderPointTrip(getDataForPointTrip);
+renderPointTrip(getDataForPointTrip.events);
+dataNow.innerHTML = moment(getTimeIsNow(), `x`).format(`MMM DD`);
+
+const filters = new Filter();
+
+const renderFilter = () => {
+  tripFilter.appendChild(filters.render());
+};
+
+renderFilter(filtersName);
+
+filters.onchange = (it) => {
+  renderPointTrip(filterPoint(getDataForPointTrip, it.target.id), tripItems);
+};

@@ -106,6 +106,10 @@ export class EditTrip extends Component {
     this._onSubmit = fn;
   }
 
+  set onDelete(fn) {
+    this._onDelete = fn;
+  }
+
   update(data) {
     this._price = data.price;
     this._offers = data.offers;
@@ -158,7 +162,6 @@ export class EditTrip extends Component {
   }
 
   _onSubmitButtonClick(evt) {
-
     evt.preventDefault();
 
     const formData = new FormData(this._element.querySelector(`.editPoint`));
@@ -172,6 +175,7 @@ export class EditTrip extends Component {
   }
 
   bind() {
+    this._element.querySelector(`.point__button--save`).addEventListener(`click`, this._onSubmitButtonClick);
     this._element.querySelector(`.point__button--save`).addEventListener(`click`, this._onSubmitButtonClick);
   }
 
