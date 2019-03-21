@@ -1,4 +1,5 @@
 import {ComponentFilters} from '../src/componentFilters';
+import {getTimeIsNow} from "./utils";
 
 export class Filter extends ComponentFilters {
   constructor() {
@@ -22,6 +23,24 @@ export class Filter extends ComponentFilters {
     this._onchange = fn;
   }
 
+  filterPoint(data, filterName) {
+    let sortData = [];
+    switch (filterName) {
+
+      case `filter-everything`:
+        sortData = data.events;
+        break;
+
+      case `filter-future`:
+
+        sortData = data.events.filter((it) => it.time[0] > getTimeIsNow());
+        break;
+
+      case `filter-past`:
+        sortData = data.events.filter((it) => it.time[0] < getTimeIsNow());
+    }
+    return sortData;
+  }
 
   _onchangeFilter(evt) {
     if (typeof this._onchange === `function`) {

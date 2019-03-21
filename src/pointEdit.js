@@ -68,7 +68,7 @@ export class EditTrip extends Component {
             
                   <div class="point__buttons">
                     <button class="point__button point__button--save" type="submit">Save</button>
-                    <button class="point__button" type="reset">Delete</button>
+                    <button class="point__button point__button--delete" type="reset">Delete</button>
                   </div>
             
                   <div class="paint__favorite-wrap">
@@ -174,9 +174,17 @@ export class EditTrip extends Component {
     this.update(newData);
   }
 
+  _onDeleteButtonClick(evt) {
+    evt.preventDefault();
+
+    if (typeof this._onSubmit === `function`) {
+      this._onDelete();
+    }
+  }
+
   bind() {
     this._element.querySelector(`.point__button--save`).addEventListener(`click`, this._onSubmitButtonClick);
-    this._element.querySelector(`.point__button--save`).addEventListener(`click`, this._onSubmitButtonClick);
+    this._element.querySelector(`.point__button--delete`).addEventListener(`click`, this._onDeleteButtonClick);
   }
 
 

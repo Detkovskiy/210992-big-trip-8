@@ -34,7 +34,8 @@ export const getTrips = () => ({
         'choose seats': getRandomFromInterval(0, 2)
       },
       'description': getRandomDescription(getRandomFromInterval(1, 4), textDescription),
-      'picture': `//picsum.photos/100/100?r=${Math.random()}`},
+      'picture': `//picsum.photos/100/100?r=${Math.random()}`,
+      'display': true},
     {
       'type': `flight`,
       'icon': `✈️`,
@@ -47,7 +48,8 @@ export const getTrips = () => ({
         'choose seats': getRandomFromInterval(0, 2)
       },
       'description': getRandomDescription(getRandomFromInterval(1, 4), textDescription),
-      'picture': `//picsum.photos/100/100?r=${Math.random()}`},
+      'picture': `//picsum.photos/100/100?r=${Math.random()}`,
+      'display': true},
     {
       'type': `drive`,
       'icon': `🚗`,
@@ -60,7 +62,8 @@ export const getTrips = () => ({
         'choose seats': getRandomFromInterval(0, 2)
       },
       'description': getRandomDescription(getRandomFromInterval(1, 4), textDescription),
-      'picture': `//picsum.photos/100/100?r=${Math.random()}`},
+      'picture': `//picsum.photos/100/100?r=${Math.random()}`,
+      'display': true},
     {
       'type': `check-in`,
       'icon': `🏨`,
@@ -73,8 +76,8 @@ export const getTrips = () => ({
         'choose seats': getRandomFromInterval(0, 2)
       },
       'description': getRandomDescription(getRandomFromInterval(1, 4), textDescription),
-      'picture': `//picsum.photos/100/100?r=${Math.random()}`}],
-  picture: `//picsum.photos/100/100?r=${Math.random()}`,
+      'picture': `//picsum.photos/100/100?r=${Math.random()}`,
+      'display': true}],
   isFavorite: false
 });
 

@@ -1,7 +1,7 @@
 import {PointTrip} from './make-point.js';
 import {EditTrip} from './pointEdit';
 import {Filter} from './filter';
-import {getTimeIsNow, filterPoint} from '../src/utils.js';
+import {getTimeIsNow} from '../src/utils.js';
 import {getTrips, filtersName} from '../src/data.js';
 import moment from 'moment';
 
@@ -58,5 +58,6 @@ const renderFilter = () => {
 renderFilter(filtersName);
 
 filters.onchange = (it) => {
-  renderPointTrip(filterPoint(getDataForPointTrip, it.target.id), tripItems);
+  const sortData = filters.filterPoint(getDataForPointTrip, it.target.id);
+  renderPointTrip(sortData, tripItems);
 };
