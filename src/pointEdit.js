@@ -14,6 +14,7 @@ export class EditTrip extends Component {
     this._onSubmit = null;
     this._offers = data.offers;
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
+    this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
   }
 
   get cardTemplate() {
@@ -176,7 +177,6 @@ export class EditTrip extends Component {
 
   _onDeleteButtonClick(evt) {
     evt.preventDefault();
-
     if (typeof this._onSubmit === `function`) {
       this._onDelete();
     }

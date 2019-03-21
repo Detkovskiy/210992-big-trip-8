@@ -16,11 +16,13 @@ const renderPointTrip = (data) => {
   const fragment = document.createDocumentFragment();
 
   for (const it of data) {
-
     const pointTrip = new PointTrip(it);
 
     const editPointTrip = new EditTrip(it);
-    fragment.appendChild(pointTrip.render());
+
+    if (it.display) {
+      fragment.appendChild(pointTrip.render());
+    }
 
     pointTrip.onEdit = () => {
       editPointTrip.render();
@@ -29,15 +31,19 @@ const renderPointTrip = (data) => {
     };
 
     editPointTrip.onSubmit = (newObject) => {
+      it.offers = newObject.offers;
+      it.price = newObject.price;
+      it.type = newObject.type;
+      it.time = newObject.time;
 
-      getDataForPointTrip.events.offers = newObject.offers;
-      getDataForPointTrip.events.price = newObject.price;
-      getDataForPointTrip.events.type = newObject.type;
-      getDataForPointTrip.events.time = newObject.time;
-
-      pointTrip.update(getDataForPointTrip.events);
+      pointTrip.update(it);
       pointTrip.render();
       tripItems.replaceChild(pointTrip.element, editPointTrip.element);
+      editPointTrip.unRender();
+    };
+
+    editPointTrip.onDelete = () => {
+      it.display = false;
       editPointTrip.unRender();
     };
   }
@@ -61,3 +67,4 @@ filters.onchange = (it) => {
   const sortData = filters.filterPoint(getDataForPointTrip, it.target.id);
   renderPointTrip(sortData, tripItems);
 };
+
