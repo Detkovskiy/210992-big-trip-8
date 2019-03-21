@@ -1,8 +1,9 @@
 import {PointTrip} from './make-point.js';
 import {EditTrip} from './pointEdit';
 import {Filter} from './filter';
-import {getTimeIsNow} from '../src/utils.js';
+import {getTimeIsNow, openStats} from '../src/utils.js';
 import {getTrips, filtersName} from '../src/data.js';
+import {renderMoneyChart, renderTransportChart} from '../src/statistic.js';
 import moment from 'moment';
 
 const tripFilter = document.querySelector(`.trip-filter`);
@@ -68,3 +69,7 @@ filters.onchange = (it) => {
   renderPointTrip(sortData, tripItems);
 };
 
+openStats();
+
+renderMoneyChart(getDataForPointTrip.events);
+renderTransportChart(getDataForPointTrip.events);

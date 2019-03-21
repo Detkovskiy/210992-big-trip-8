@@ -77,6 +77,34 @@ export const getTrips = () => ({
       },
       'description': getRandomDescription(getRandomFromInterval(1, 4), textDescription),
       'picture': `//picsum.photos/100/100?r=${Math.random()}`,
+      'display': true},
+    {
+      'type': `taxi`,
+      'icon': `🚕`,
+      'price': getRandomFromInterval(200, 400),
+      'time': [moment(getRandomFromInterval(0, 12) + `:` + getRandomFromInterval(0, 30), `HH:mm`).format(`x`), moment(getRandomFromInterval(12, 24) + `:` + getRandomFromInterval(30, 60), `HH:mm`).format(`x`)],
+      'offers': {
+        'add luggage': getRandomFromInterval(0, 2),
+        'switch to comfort class': getRandomFromInterval(0, 2),
+        'add meal': getRandomFromInterval(0, 2),
+        'choose seats': getRandomFromInterval(0, 2)
+      },
+      'description': getRandomDescription(getRandomFromInterval(1, 4), textDescription),
+      'picture': `//picsum.photos/100/100?r=${Math.random()}`,
+      'display': true},
+    {
+      'type': `drive`,
+      'icon': `🚗`,
+      'price': getRandomFromInterval(200, 400),
+      'time': [moment(getRandomFromInterval(0, 12) + `:` + getRandomFromInterval(0, 30), `HH:mm`).format(`x`), moment(getRandomFromInterval(12, 24) + `:` + getRandomFromInterval(30, 60), `HH:mm`).format(`x`)],
+      'offers': {
+        'add luggage': getRandomFromInterval(0, 2),
+        'switch to comfort class': getRandomFromInterval(0, 2),
+        'add meal': getRandomFromInterval(0, 2),
+        'choose seats': getRandomFromInterval(0, 2)
+      },
+      'description': getRandomDescription(getRandomFromInterval(1, 4), textDescription),
+      'picture': `//picsum.photos/100/100?r=${Math.random()}`,
       'display': true}],
   isFavorite: false
 });
