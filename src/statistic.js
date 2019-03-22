@@ -84,11 +84,12 @@ const renderMoneyChart = (data) => {
 };
 
 const renderTransportChart = (data) => {
-  const find = (arr) => {
+
+  const find = (arrLabels) => {
     const arrTypePoint = [];
     const arrColPoint = [];
 
-    arr.forEach(function (item) {
+    arrLabels.forEach(function (item) {
       if (arrTypePoint.indexOf(item) === -1) {
         arrTypePoint.push(item);
         arrColPoint[arrTypePoint.indexOf(item)] = 1;
@@ -101,7 +102,7 @@ const renderTransportChart = (data) => {
   };
 
 
-  const transportChartData = find(data.map((it) => it.type.toUpperCase()));
+  const transportChartData = find(data.map((it) => it.icon + it.type.toUpperCase()));
 
 
   return new Chart(transportCtx, {

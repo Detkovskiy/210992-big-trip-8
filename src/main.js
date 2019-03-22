@@ -73,3 +73,4 @@ openStats();
 
 renderMoneyChart(getDataForPointTrip.events);
 renderTransportChart(getDataForPointTrip.events);
+
