@@ -6,24 +6,36 @@ const transportCtx = document.querySelector(`.statistic__transport`);
 const timeSpendCtx = document.querySelector(`.statistic__time-spend`);
 
 const BAR_HEIGHT = 55;
-moneyCtx.height = BAR_HEIGHT * 6;
+moneyCtx.height = BAR_HEIGHT * 4;
 transportCtx.height = BAR_HEIGHT * 4;
 timeSpendCtx.height = BAR_HEIGHT * 4;
 
 const renderMoneyChart = (data) => {
 
-  const moneyChartData = {
-    labels: data.map((it) => it.icon + it.type.toUpperCase()),
-    price: data.map((it) => it.price)
+  const getMoneyChartData = (arr) => {
+    const arrTypePoint = [];
+    const arrPricePoint = [];
+
+    arr.forEach(function ([item, price]) {
+      if (arrTypePoint.indexOf(item) === -1) {
+        arrTypePoint.push(item);
+        arrPricePoint[arrTypePoint.indexOf(item)] = price;
+      } else {
+        arrPricePoint[arrTypePoint.indexOf(item)] += price;
+      }
+    });
+
+    return {arrTypePoint, arrPricePoint};
   };
+  const moneyChartData = getMoneyChartData(data.map((it) => [it.icon + it.type.toUpperCase(), it.price]));
 
   return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: moneyChartData.labels,
+      labels: moneyChartData.arrTypePoint,
       datasets: [{
-        data: moneyChartData.price,
+        data: moneyChartData.arrPricePoint,
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`
@@ -85,7 +97,7 @@ const renderMoneyChart = (data) => {
 
 const renderTransportChart = (data) => {
 
-  const find = (arrLabels) => {
+  const getTransportChartData = (arrLabels) => {
     const arrTypePoint = [];
     const arrColPoint = [];
 
@@ -102,7 +114,7 @@ const renderTransportChart = (data) => {
   };
 
 
-  const transportChartData = find(data.map((it) => it.icon + it.type.toUpperCase()));
+  const transportChartData = getTransportChartData(data.map((it) => it.icon + it.type.toUpperCase()));
 
 
   return new Chart(transportCtx, {
