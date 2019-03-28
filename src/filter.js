@@ -1,11 +1,10 @@
-import {ComponentFilters} from '../src/componentFilters';
-import {getTimeIsNow} from "./utils";
+import {createElement, getTimeIsNow} from "./utils";
 
-export class Filter extends ComponentFilters {
+export class Filter {
   constructor() {
-    super();
+    this._element = null;
     this._onChange = null;
-    this._onchangeFilter = this._onchangeFilter.bind(this);
+    this._onChangeFilter = this._onChangeFilter.bind(this);
   }
 
   get filterTemplate() {
@@ -42,14 +41,20 @@ export class Filter extends ComponentFilters {
     return sortData;
   }
 
-  _onchangeFilter(evt) {
+  _onChangeFilter(evt) {
     if (typeof this._onChange === `function`) {
       this._onChange(evt);
     }
   }
 
   bind() {
-    this._element.addEventListener(`change`, this._onchangeFilter);
+    this._element.addEventListener(`change`, this._onChangeFilter);
+  }
+
+  render() {
+    this._element = createElement(this.filterTemplate);
+    this.bind();
+    return this._element;
   }
 
 }
