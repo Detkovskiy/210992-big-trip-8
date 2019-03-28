@@ -4,7 +4,7 @@ import {getTimeIsNow} from "./utils";
 export class Filter extends ComponentFilters {
   constructor() {
     super();
-    this._onchange = null;
+    this._onChange = null;
     this._onchangeFilter = this._onchangeFilter.bind(this);
   }
 
@@ -19,8 +19,8 @@ export class Filter extends ComponentFilters {
       </form>`;
   }
 
-  set onchange(fn) {
-    this._onchange = fn;
+  set onChange(fn) {
+    this._onChange = fn;
   }
 
   filterPoint(data, filterName) {
@@ -43,8 +43,8 @@ export class Filter extends ComponentFilters {
   }
 
   _onchangeFilter(evt) {
-    if (typeof this._onchange === `function`) {
-      this._onchange(evt);
+    if (typeof this._onChange === `function`) {
+      this._onChange(evt);
     }
   }
 

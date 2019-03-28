@@ -17,7 +17,6 @@ export class Component {
     };
 
     this._element = null;
-    this._display = true;
     this._state = {};
   }
 

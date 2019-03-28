@@ -64,7 +64,7 @@ const renderFilter = () => {
 
 renderFilter(filtersName);
 
-filters.onchange = (it) => {
+filters.onChange = (it) => {
   const sortData = filters.filterPoint(getDataForPointTrip, it.target.id);
   renderPointTrip(sortData, tripItems);
 };
