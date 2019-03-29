@@ -5,6 +5,7 @@ import {getTimeIsNow, openStats} from '../src/utils.js';
 import {getTrips, filtersName} from '../src/data.js';
 import {renderMoneyChart, renderTransportChart} from '../src/statistic.js';
 import moment from 'moment';
+import {API} from './api';
 
 const tripFilter = document.querySelector(`.trip-filter`);
 const tripItems = document.querySelector(`.trip-day__items`);
@@ -73,4 +74,13 @@ openStats();
 
 renderMoneyChart(getDataForPointTrip.events);
 renderTransportChart(getDataForPointTrip.events);
+
+const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
+const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
+
+const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
+api.getTasks()
+  .then((tasks) => {
+    console.log(tasks);
+  });
 
