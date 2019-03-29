@@ -1,5 +1,5 @@
 import {Component} from '../src/component';
-import moment from '../node_modules/moment/moment.js';
+import moment from 'moment';
 
 
 export class EditTrip extends Component {
@@ -14,6 +14,7 @@ export class EditTrip extends Component {
     this._onSubmit = null;
     this._offers = data.offers;
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
+    this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
   }
 
   get cardTemplate() {
@@ -57,7 +58,7 @@ export class EditTrip extends Component {
             
                   <label class="point__time">
                     choose time
-                    <input class="point__input" type="text" value="${moment(this._timeStart).format(`HH:mm`)} — ${moment(this._timeEnd).format(`HH:mm`)}" name="time" placeholder="00:00 — 00:00">
+                    <input class="point__input" type="text" value="${moment(this._timeStart, `x`).format(`HH:mm`)} — ${moment(this._timeEnd, `x`).format(`HH:mm`)}" name="time" placeholder="00:00 — 00:00">
                   </label>
             
                   <label class="point__price">
@@ -68,7 +69,7 @@ export class EditTrip extends Component {
             
                   <div class="point__buttons">
                     <button class="point__button point__button--save" type="submit">Save</button>
-                    <button class="point__button" type="reset">Delete</button>
+                    <button class="point__button point__button--delete" type="reset">Delete</button>
                   </div>
             
                   <div class="paint__favorite-wrap">
@@ -106,6 +107,10 @@ export class EditTrip extends Component {
     this._onSubmit = fn;
   }
 
+  set onDelete(fn) {
+    this._onDelete = fn;
+  }
+
   update(data) {
     this._price = data.price;
     this._offers = data.offers;
@@ -127,7 +132,7 @@ export class EditTrip extends Component {
       },
       'time': (value) => {
         const [timeStart, timeEnd] = value.replace(/ — /g, `,`).split(`,`);
-        target.time = [+moment(timeStart, `HH:mm`).format(`x`), +moment(timeEnd, `HH:mm`).format(`x`)];
+        target.time = [moment(timeStart, `HH:mm`).format(`x`), moment(timeEnd, `HH:mm`).format(`x`)];
       }
     };
   }
@@ -158,7 +163,6 @@ export class EditTrip extends Component {
   }
 
   _onSubmitButtonClick(evt) {
-
     evt.preventDefault();
 
     const formData = new FormData(this._element.querySelector(`.editPoint`));
@@ -171,8 +175,16 @@ export class EditTrip extends Component {
     this.update(newData);
   }
 
+  _onDeleteButtonClick(evt) {
+    evt.preventDefault();
+    if (typeof this._onSubmit === `function`) {
+      this._onDelete();
+    }
+  }
+
   bind() {
     this._element.querySelector(`.point__button--save`).addEventListener(`click`, this._onSubmitButtonClick);
+    this._element.querySelector(`.point__button--delete`).addEventListener(`click`, this._onDeleteButtonClick);
   }
 
 

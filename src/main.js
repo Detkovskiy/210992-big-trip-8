@@ -1,40 +1,29 @@
-import {renderFilter} from '../src/make-filter.js';
 import {PointTrip} from './make-point.js';
 import {EditTrip} from './pointEdit';
-import {render} from '../src/utils.js';
-import {getTrips} from '../src/data.js';
+import {Filter} from './filter';
+import {getTimeIsNow, openStats} from '../src/utils.js';
+import {getTrips, filtersName} from '../src/data.js';
+import {renderMoneyChart, renderTransportChart} from '../src/statistic.js';
+import moment from 'moment';
 
 const tripFilter = document.querySelector(`.trip-filter`);
 const tripItems = document.querySelector(`.trip-day__items`);
-
-
-const filtersName = [
-  {
-    label: `everything`,
-    checked: true,
-  },
-  {
-    label: `future`,
-  },
-  {
-    label: `past`,
-  }
-];
-
-render(tripFilter, renderFilter(filtersName));
+const dataNow = document.querySelector(`.trip-day__title`);
 
 const getDataForPointTrip = getTrips();
 
 const renderPointTrip = (data) => {
-
+  tripItems.innerHTML = ``;
   const fragment = document.createDocumentFragment();
 
-  for (const it of data.events) {
-
+  for (const it of data) {
     const pointTrip = new PointTrip(it);
+
     const editPointTrip = new EditTrip(it);
 
-    fragment.appendChild(pointTrip.render());
+    if (it.display) {
+      fragment.appendChild(pointTrip.render());
+    }
 
     pointTrip.onEdit = () => {
       editPointTrip.render();
@@ -43,15 +32,19 @@ const renderPointTrip = (data) => {
     };
 
     editPointTrip.onSubmit = (newObject) => {
+      it.offers = newObject.offers;
+      it.price = newObject.price;
+      it.type = newObject.type;
+      it.time = newObject.time;
 
-      getDataForPointTrip.events.offers = newObject.offers;
-      getDataForPointTrip.events.price = newObject.price;
-      getDataForPointTrip.events.type = newObject.type;
-      getDataForPointTrip.events.time = newObject.time;
-
-      pointTrip.update(getDataForPointTrip.events);
+      pointTrip.update(it);
       pointTrip.render();
       tripItems.replaceChild(pointTrip.element, editPointTrip.element);
+      editPointTrip.unRender();
+    };
+
+    editPointTrip.onDelete = () => {
+      it.display = false;
       editPointTrip.unRender();
     };
   }
@@ -60,4 +53,24 @@ const renderPointTrip = (data) => {
 
 };
 
-renderPointTrip(getDataForPointTrip);
+renderPointTrip(getDataForPointTrip.events);
+dataNow.innerHTML = moment(getTimeIsNow(), `x`).format(`MMM DD`);
+
+const filters = new Filter();
+
+const renderFilter = () => {
+  tripFilter.appendChild(filters.render());
+};
+
+renderFilter(filtersName);
+
+filters.onChange = (it) => {
+  const sortData = filters.filterPoint(getDataForPointTrip, it.target.id);
+  renderPointTrip(sortData, tripItems);
+};
+
+openStats();
+
+renderMoneyChart(getDataForPointTrip.events);
+renderTransportChart(getDataForPointTrip.events);
+
