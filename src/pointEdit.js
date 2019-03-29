@@ -1,6 +1,6 @@
 import {Component} from '../src/component';
 import moment from 'moment';
-
+import flatpickr from "flatpickr";
 
 export class EditTrip extends Component {
   constructor(data) {
@@ -58,7 +58,8 @@ export class EditTrip extends Component {
             
                   <label class="point__time">
                     choose time
-                    <input class="point__input" type="text" value="${moment(this._timeStart, `x`).format(`HH:mm`)} — ${moment(this._timeEnd, `x`).format(`HH:mm`)}" name="time" placeholder="00:00 — 00:00">
+                    <input class="point__input date-start" type="text" value="${moment(this._timeStart, `x`).format(`HH:mm`)}" name="date-start" placeholder="19:00">
+                    <input class="point__input date-end" type="text" value="${moment(this._timeEnd, `x`).format(`HH:mm`)}" name="date-end" placeholder="21:00">
                   </label>
             
                   <label class="point__price">
@@ -185,6 +186,20 @@ export class EditTrip extends Component {
   bind() {
     this._element.querySelector(`.point__button--save`).addEventListener(`click`, this._onSubmitButtonClick);
     this._element.querySelector(`.point__button--delete`).addEventListener(`click`, this._onDeleteButtonClick);
+
+    flatpickr(this._element.querySelector(`.date-start`), {
+      enableTime: true,
+      noCalendar: true,
+      dateFormat: `H:i`,
+      time_24hr: true
+    });
+
+    flatpickr(this._element.querySelector(`.date-end`), {
+      enableTime: true,
+      noCalendar: true,
+      dateFormat: `H:i`,
+      time_24hr: true
+    });
   }
 
 
