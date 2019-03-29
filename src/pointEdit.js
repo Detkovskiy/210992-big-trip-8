@@ -131,9 +131,11 @@ export class EditTrip extends Component {
       'travel-way': (value) => {
         target.type = value;
       },
-      'time': (value) => {
-        const [timeStart, timeEnd] = value.replace(/ — /g, `,`).split(`,`);
-        target.time = [moment(timeStart, `HH:mm`).format(`x`), moment(timeEnd, `HH:mm`).format(`x`)];
+      'date-start': (value) => {
+        target.time.push(moment(value, `HH:mm`).format(`x`));
+      },
+      'date-end': (value) => {
+        target.time.push(moment(value, `HH:mm`).format(`x`));
       }
     };
   }
@@ -141,7 +143,7 @@ export class EditTrip extends Component {
   static processForm(formData) {
     const entry = {
       price: null,
-      time: ``,
+      time: [],
       offers: {
         'add-luggage': false,
         'switch-to-comfort-class': false,
