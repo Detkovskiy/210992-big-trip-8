@@ -11,11 +11,12 @@ export class EditTrip extends Component {
     this._price = data.base_price;
     this._offers = data.offers;
     this._description = data.destination;
-    this._descriptionName = null;
+    this._descriptionDatalistNames = null;
     this._onEdit = null;
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
     this._onDestinationChange = this._onDestinationChange.bind(this);
+    this._onSelectTypeTravel = this._onSelectTypeTravel.bind(this);
   }
 
   get cardTemplate() {
@@ -50,8 +51,8 @@ export class EditTrip extends Component {
                     <label class="point__destination-label" for="destination">${this._type} to</label>
                     <input class="point__destination-input" list="destination-select" id="destination" value="${this._description.name}" name="destination">
                     <datalist id="destination-select">
-                    ${this._descriptionName.map((it) => ` 
-                      <option value="${it.name}"></option>`).join(``)}                 
+                      ${this._descriptionDatalistNames.map((it) => ` 
+                        <option value="${it.name}"></option>`).join(``)}                 
                     </datalist>
                   </div>
             
@@ -83,11 +84,7 @@ export class EditTrip extends Component {
                     <h3 class="point__details-title">offers</h3>
                       
                       <div class="point__offers-wrap">
-                        ${this._offers.map((it) => ` 
-                          <input class="point__offers-input visually-hidden" type="checkbox" id="${it.title}" name="offer" value="${it.title}" ${it.accepted ? `checked` : ``}>
-                          <label for="${it.title}" class="point__offers-label">
-                            <span class="point__offer-service">${it.title}</span> + €<span class="point__offer-price">${it.price}</span>
-                          </label>`).join(``)}
+                        ${this._getOffersTemplate()}
                       </div>
                       
                   </section>
@@ -120,9 +117,27 @@ export class EditTrip extends Component {
     }
   }
 
-  set descriptionNames(data) {
+  set offers(data) {
     if (data) {
-      this._descriptionName = data;
+      this._offers = data;
+    }
+  }
+
+  set type(data) {
+    if (data) {
+      this._type = data;
+    }
+  }
+
+  set descriptionDatalistNames(data) {
+    if (data) {
+      this._descriptionDatalistNames = data;
+    }
+  }
+
+  set onChangeTravelType(fn) {
+    if (typeof fn === `function`) {
+      this._onTravelType = fn;
     }
   }
 
@@ -215,10 +230,27 @@ export class EditTrip extends Component {
       </div>`;
   }
 
+  _getOffersTemplate() {
+    return `
+      ${this._offers.map((it) => ` 
+        <input class="point__offers-input visually-hidden" type="checkbox" id="${it.title}" name="offer" value="${it.title}" ${it.accepted ? `checked` : ``}>
+        <label for="${it.title}" class="point__offers-label">
+          <span class="point__offer-service">${it.title}</span> + €<span class="point__offer-price">${it.price}</span>
+        </label>`).join(``)}`;
+  }
+
+  _onSelectTypeTravel(evt) {
+    this._onTravelType(evt);
+    this._element.querySelector(`.point__destination-label`).innerText = `${this._type} to`;
+    this._element.querySelector(`.point__offers-wrap`).innerHTML = this._getOffersTemplate();
+  }
+
   bind() {
     this._element.querySelector(`.point__button--save`).addEventListener(`click`, this._onSubmitButtonClick);
     this._element.querySelector(`.point__button--delete`).addEventListener(`click`, this._onDeleteButtonClick);
-    this.element.querySelector(`.point__destination-input`).addEventListener(`change`, this._onDestinationChange);
+    this._element.querySelector(`.point__destination-input`).addEventListener(`change`, this._onDestinationChange);
+
+    this.element.querySelector(`.travel-way__select`).addEventListener(`change`, this._onSelectTypeTravel);
 
     flatpickr(this._element.querySelector(`.date-start`), {
       enableTime: true,

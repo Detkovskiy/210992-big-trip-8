@@ -21,7 +21,7 @@ const renderPointTrip = (data) => {
     fragment.appendChild(pointTrip.render());
 
     pointTrip.onEdit = () => {
-      editPointTrip.descriptionNames = data.destinations;
+      editPointTrip.descriptionDatalistNames = data.destinations;
       editPointTrip.render();
       tripItems.replaceChild(editPointTrip.element, pointTrip.element);
       pointTrip.unRender();
@@ -47,6 +47,12 @@ const renderPointTrip = (data) => {
     editPointTrip.onChangeDestination = (evt) => {
       editPointTrip.description = data.destinations.find((item) => item.name === evt.target.value);
     };
+
+    editPointTrip.onChangeTravelType = (evt) => {
+      editPointTrip.type = evt.target.value;
+      editPointTrip.offers = data.offers.find((item) => item.type === evt.target.value).offers;
+
+    };
   }
 
   tripItems.appendChild(fragment);
@@ -69,6 +75,7 @@ api.getDate(`destinations`)
         api.getDate(`points`)
           .then((points) => {
             trips.events = points;
+            console.log(trips);
             renderPointTrip(trips);
 
             const filters = new Filter();
