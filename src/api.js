@@ -23,42 +23,19 @@ export const API = class {
     this._authorization = authorization;
   }
 
-  getTasks() {
-    return this._load({url: `points`}).then(toJSON);
-  }
-
-  createTask({task}) {
-    return this._load({
-      url: `tasks`,
-      method: Method.POST,
-      body: JSON.stringify(task),
-      headers: new Headers({'Content-Type': `application/json`})
-    })
-      .then(toJSON);
-  }
-
-  updateTask({id, data}) {
-    return this._load({
-      url: `tasks/${id}`,
-      method: Method.PUT,
-      body: JSON.stringify(data),
-      headers: new Headers({'Content-Type': `application/json`})
-    })
-      .then(toJSON);
-  }
-
-  deleteTask({id}) {
-    return this._load({url: `tasks/${id}`, method: Method.DELETE});
+  getDate(urlPoint) {
+    return this._load({url: urlPoint}).then(toJSON);
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
+
     headers.append(`Authorization`, this._authorization);
 
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
       .then(checkStatus)
       .catch((err) => {
-        console.error(`fetch error: ${err}`);
         throw err;
       });
   }
 };
+

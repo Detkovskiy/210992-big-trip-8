@@ -4,25 +4,12 @@ import moment from 'moment';
 export class PointTrip extends Component {
   constructor(data) {
     super();
-
     this._type = data.type;
     this._timeStart = data.date_from;
     this._timeEnd = data.date_to;
     this._price = data.base_price;
     this._offers = data.offers;
     this._onEdit = null;
-
-    /*
-
-    this._type = data.type;
-    this._timeStart = data.time[0];
-    this._timeEnd = data.time[1];
-    this._price = data.price;
-    this._offers = data.offers;
-    this._onEdit = null;
-
-    */
-
     this._onEditButtonClick = this._onEditButtonClick.bind(this);
   }
 
@@ -36,9 +23,10 @@ export class PointTrip extends Component {
               </p>
               <p class="trip-point__price">€ ${this._price}</p>
               <ul class="trip-point__offers">
-              ${Object.entries(this._offers).map(([offer, checked]) => `${checked ? `
+              
+              ${this._offers.map((it) => `${it.accepted ? `
                 <li>
-                  <button class="trip-point__offer">${offer.replace(/-/g, ` `)}</button>
+                  <button class="trip-point__offer">${it.title}</button>
                 </li>` : ``}`).join(``)}
               </ul>
             </article>`;
@@ -69,13 +57,5 @@ export class PointTrip extends Component {
     this._type = data.type;
     this._timeStart = data.time[0];
     this._timeEnd = data.time[1];
-  }
-
-  static parseTask(data) {
-    return new PointTrip(data);
-  }
-
-  static parseTasks(data) {
-    return data.map(PointTrip.parseTask);
   }
 }

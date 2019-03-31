@@ -13,7 +13,7 @@ export class Component {
       'train': `🚂`,
       'flight': `✈️`,
       'check-in': `🏨`,
-      'sight-seeing': `🏛`
+      'sightseeing': `🏛`
     };
 
     this._element = null;

@@ -6,15 +6,16 @@ export class EditTrip extends Component {
   constructor(data) {
     super();
     this._type = data.type;
-    this._timeStart = data.time[0];
-    this._timeEnd = data.time[1];
-    this._price = data.price;
-    this._description = data.description;
-    this._picture = data.picture;
-    this._onSubmit = null;
+    this._timeStart = data.date_from;
+    this._timeEnd = data.date_to;
+    this._price = data.base_price;
     this._offers = data.offers;
+    this._description = data.destination;
+    this._descriptionName = null;
+    this._onEdit = null;
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
+    this._onDestinationChange = this._onDestinationChange.bind(this);
   }
 
   get cardTemplate() {
@@ -47,12 +48,10 @@ export class EditTrip extends Component {
             
                   <div class="point__destination-wrap">
                     <label class="point__destination-label" for="destination">${this._type} to</label>
-                    <input class="point__destination-input" list="destination-select" id="destination" value="Chamonix" name="destination">
+                    <input class="point__destination-input" list="destination-select" id="destination" value="${this._description.name}" name="destination">
                     <datalist id="destination-select">
-                      <option value="airport"></option>
-                      <option value="Geneva"></option>
-                      <option value="Chamonix"></option>
-                      <option value="hotel"></option>
+                    ${this._descriptionName.map((it) => ` 
+                      <option value="${it.name}"></option>`).join(``)}                 
                     </datalist>
                   </div>
             
@@ -82,21 +81,18 @@ export class EditTrip extends Component {
                 <section class="point__details">
                   <section class="point__offers">
                     <h3 class="point__details-title">offers</h3>
+                      
                       <div class="point__offers-wrap">
-                        ${Object.entries(this._offers).map(([offer, checked]) => ` 
-                          <input class="point__offers-input visually-hidden" type="checkbox" id="${offer.replace(/ /g, `-`)}" name="offer" value="${offer.replace(/ /g, `-`)}" ${checked ? `checked` : ``}>
-                          <label for="${offer.replace(/ /g, `-`)}" class="point__offers-label">
-                            <span class="point__offer-service">${offer.replace(/-/g, ` `)}</span> + €<span class="point__offer-price">30</span>
+                        ${this._offers.map((it) => ` 
+                          <input class="point__offers-input visually-hidden" type="checkbox" id="${it.title}" name="offer" value="${it.title}" ${it.accepted ? `checked` : ``}>
+                          <label for="${it.title}" class="point__offers-label">
+                            <span class="point__offer-service">${it.title}</span> + €<span class="point__offer-price">${it.price}</span>
                           </label>`).join(``)}
-                    </div>
-            
+                      </div>
+                      
                   </section>
                   <section class="point__destination">
-                    <h3 class="point__details-title">Destination</h3>
-                    <p class="point__destination-text">${this._description}</p>
-                    <div class="point__destination-images">
-                      <img src="http://${this._picture}" alt="picture from place" class="point__destination-image">
-                    </div>
+                    ${this._getDestinationTemplate()}
                   </section>
                   <input type="hidden" class="point__total-price" name="total-price" value="">
                 </section>
@@ -110,6 +106,24 @@ export class EditTrip extends Component {
 
   set onDelete(fn) {
     this._onDelete = fn;
+  }
+
+  set onChangeDestination(fn) {
+    if (typeof fn === `function`) {
+      this._onDestination = fn;
+    }
+  }
+
+  set description(data) {
+    if (data) {
+      this._description = data;
+    }
+  }
+
+  set descriptionNames(data) {
+    if (data) {
+      this._descriptionName = data;
+    }
   }
 
   update(data) {
@@ -180,14 +194,31 @@ export class EditTrip extends Component {
 
   _onDeleteButtonClick(evt) {
     evt.preventDefault();
-    if (typeof this._onSubmit === `function`) {
+    if (typeof this._onDelete === `function`) {
       this._onDelete();
     }
+  }
+
+  _onDestinationChange(evt) {
+    this._onDestination(evt);
+    this._element.querySelector(`.point__destination`).innerHTML = this._getDestinationTemplate();
+  }
+
+  _getDestinationTemplate() {
+    return `
+      <div>
+        <h3 class="point__details-title">${this._description.name}</h3>
+        <p class="point__destination-text">${this._description.description}</p>
+        <div class="point__destination-images">
+        ${this._description.pictures.map((it) => ` 
+          <img src="${it.src}" alt="${it.description}" class="point__destination-image">`).join(``)}
+      </div>`;
   }
 
   bind() {
     this._element.querySelector(`.point__button--save`).addEventListener(`click`, this._onSubmitButtonClick);
     this._element.querySelector(`.point__button--delete`).addEventListener(`click`, this._onDeleteButtonClick);
+    this.element.querySelector(`.point__destination-input`).addEventListener(`change`, this._onDestinationChange);
 
     flatpickr(this._element.querySelector(`.date-start`), {
       enableTime: true,
@@ -203,7 +234,6 @@ export class EditTrip extends Component {
       time_24hr: true
     });
   }
-
 
   unbind() {
     this._element.querySelector(`.point__button--save`).removeEventListener(`click`, this._onSubmitButtonClick);

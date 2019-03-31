@@ -31,12 +31,11 @@ export class Filter {
         break;
 
       case `filter-future`:
-
-        sortData = data.events.filter((it) => it.time[0] > getTimeIsNow());
+        sortData = data.events.filter((it) => it.date_from > getTimeIsNow());
         break;
 
       case `filter-past`:
-        sortData = data.events.filter((it) => it.time[0] < getTimeIsNow());
+        sortData = data.events.filter((it) => it.date_from < getTimeIsNow());
     }
     return sortData;
   }

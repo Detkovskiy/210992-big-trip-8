@@ -1,3 +1,4 @@
+import {trips} from "./data.js";
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
@@ -27,7 +28,7 @@ const renderMoneyChart = (data) => {
 
     return {arrTypePoint, arrPricePoint};
   };
-  const moneyChartData = getMoneyChartData(data.map((it) => [it.icon + it.type.toUpperCase(), it.price]));
+  const moneyChartData = getMoneyChartData(data.map((it) => [trips.icons[it.type] + it.type.toUpperCase(), it.base_price]));
 
   return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
@@ -114,7 +115,7 @@ const renderTransportChart = (data) => {
   };
 
 
-  const transportChartData = getTransportChartData(data.map((it) => it.icon + it.type.toUpperCase()));
+  const transportChartData = getTransportChartData(data.map((it) => trips.icons[it.type] + it.type.toUpperCase()));
 
 
   return new Chart(transportCtx, {
