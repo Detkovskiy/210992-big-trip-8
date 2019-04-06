@@ -1,9 +1,12 @@
+import {ModelPoint} from './model-point';
+
 const Method = {
   GET: `GET`,
   POST: `POST`,
   PUT: `PUT`,
   DELETE: `DELETE`
 };
+
 
 const checkStatus = (response) => {
   if (response.status >= 200 && response.status < 300) {
@@ -23,8 +26,31 @@ export const API = class {
     this._authorization = authorization;
   }
 
-  getDate(urlPoint) {
-    return this._load({url: urlPoint}).then(toJSON);
+  loadData() {
+    return Promise.all([
+      this.loadPoints(),
+      this.loadOffers(),
+      this.loadDestinations()
+    ])
+      .catch((error) => {
+        throw new Error(error);
+      });
+  }
+
+  loadPoints() {
+    return this._load({url: `points`})
+      .then(toJSON)
+      .then(ModelPoint.parsePoints);
+  }
+
+  loadOffers() {
+    return this._load({url: `offers`})
+      .then(toJSON);
+  }
+
+  loadDestinations() {
+    return this._load({url: `destinations`})
+      .then(toJSON);
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {

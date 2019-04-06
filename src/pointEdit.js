@@ -5,12 +5,13 @@ import flatpickr from "flatpickr";
 export class EditTrip extends Component {
   constructor(data) {
     super();
-    this._type = data.type;
-    this._timeStart = data.date_from;
-    this._timeEnd = data.date_to;
-    this._price = data.base_price;
-    this._offers = data.offers;
-    this._description = data.destination;
+    this._id = data.it.id;
+    this._type = data.it.type;
+    this._timeStart = data.it.timeStart;
+    this._timeEnd = data.it.timeEnd;
+    this._price = data.it.price;
+    this._offers = data.it.offers;
+    this._description = data.it.destination;
     this._descriptionDatalistNames = null;
     this._onEdit = null;
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);

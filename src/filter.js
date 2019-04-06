@@ -24,18 +24,19 @@ export class Filter {
 
   filterPoint(data, filterName) {
     let sortData = [];
+
     switch (filterName) {
 
       case `filter-everything`:
-        sortData = data.events;
+        sortData = data;
         break;
 
       case `filter-future`:
-        sortData = data.events.filter((it) => it.date_from > getTimeIsNow());
+        sortData = data.filter((it) => it.timeStart > getTimeIsNow());
         break;
 
       case `filter-past`:
-        sortData = data.events.filter((it) => it.date_from < getTimeIsNow());
+        sortData = data.filter((it) => it.timeEnd < getTimeIsNow());
     }
     return sortData;
   }

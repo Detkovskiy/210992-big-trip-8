@@ -10,19 +10,4 @@ const filtersName = [
   }
 ];
 
-const trips = {
-  icons: {
-    'taxi': `🚕`,
-    'bus': `🚌`,
-    'drive': `🚗`,
-    'train': `🚂`,
-    'flight': `✈️`,
-    'check-in': `🏨`,
-    'sightseeing': `🏛`
-  },
-  events: [],
-  destinations: [],
-  offers: []
-};
-
-export {trips, filtersName};
+export {filtersName};
