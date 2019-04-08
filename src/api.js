@@ -20,21 +20,10 @@ const toJSON = (response) => {
   return response.json();
 };
 
-export const API = class {
+export class API {
   constructor({endPoint, authorization}) {
     this._endPoint = endPoint;
     this._authorization = authorization;
-  }
-
-  loadData() {
-    return Promise.all([
-      this.loadPoints(),
-      this.loadOffers(),
-      this.loadDestinations()
-    ])
-      .catch((error) => {
-        throw new Error(error);
-      });
   }
 
   loadPoints() {
@@ -63,5 +52,5 @@ export const API = class {
         throw err;
       });
   }
-};
+}
 

@@ -12,7 +12,8 @@ export class EditTrip extends Component {
     this._price = data.it.price;
     this._offers = data.it.offers;
     this._description = data.it.destination;
-    this._descriptionDatalistNames = null;
+    this._descriptionDatalistNames = data.data.destinations;
+    this._allOffers = data.data.offers;
     this._onEdit = null;
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
@@ -98,6 +99,7 @@ export class EditTrip extends Component {
             </article>`;
   }
 
+
   set onSubmit(fn) {
     this._onSubmit = fn;
   }
@@ -130,11 +132,6 @@ export class EditTrip extends Component {
     }
   }
 
-  set descriptionDatalistNames(data) {
-    if (data) {
-      this._descriptionDatalistNames = data;
-    }
-  }
 
   set onChangeTravelType(fn) {
     if (typeof fn === `function`) {
@@ -233,10 +230,10 @@ export class EditTrip extends Component {
 
   _getOffersTemplate() {
     return `
-      ${this._offers.map((it) => ` 
-        <input class="point__offers-input visually-hidden" type="checkbox" id="${it.title}" name="offer" value="${it.title}" ${it.accepted ? `checked` : ``}>
-        <label for="${it.title}" class="point__offers-label">
-          <span class="point__offer-service">${it.title}</span> + €<span class="point__offer-price">${it.price}</span>
+      ${this._allOffers.find((item) => item.type === this._type).offers.map((it) => ` 
+        <input class="point__offers-input visually-hidden" type="checkbox" id="${it.name}" name="offer" value="${it.name}" ${this._offers.find((offer) => offer.title === it.name && offer.accepted) ? `checked` : ``}>
+        <label for="${it.name}" class="point__offers-label">
+          <span class="point__offer-service">${it.name}</span> + €<span class="point__offer-price">${it.price}</span>
         </label>`).join(``)}`;
   }
 
@@ -257,14 +254,14 @@ export class EditTrip extends Component {
       enableTime: true,
       noCalendar: true,
       dateFormat: `H:i`,
-      time_24hr: true
+      [`time_24hr`]: true
     });
 
     flatpickr(this._element.querySelector(`.date-end`), {
       enableTime: true,
       noCalendar: true,
       dateFormat: `H:i`,
-      time_24hr: true
+      [`time_24hr`]: true
     });
   }
 

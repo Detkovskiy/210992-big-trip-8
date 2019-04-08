@@ -1,4 +1,3 @@
-import {trips} from "./data.js";
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
