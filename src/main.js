@@ -1,28 +1,23 @@
 import {PointTrip} from './make-point.js';
 import {EditTrip} from './pointEdit';
 import {Filter} from './filter';
-import {getTimeIsNow, openStats} from '../src/utils.js';
+import {getTripDays, openStats} from '../src/utils.js';
 import {filtersName, dataTrips, message} from '../src/data.js';
 import {API} from './api.js';
 import {renderMoneyChart, renderTransportChart} from '../src/statistic.js';
-import moment from 'moment';
-
 
 const tripFilter = document.querySelector(`.trip-filter`);
-const tripItems = document.querySelector(`.trip-day__items`);
-const dataNow = document.querySelector(`.trip-day__title`);
+const sectionTripPoints = document.querySelector(`.trip-points`);
 
-const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAso=`;
+const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZsxAoszz=`;
 const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
 
 const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 
-tripItems.innerHTML = message.loadData;
+sectionTripPoints.innerHTML = message.loadData;
 
-const renderPointTrip = (data) => {
-  //console.log(data.points);
-
-  tripItems.innerHTML = ``;
+const renderPointTrip = (data, container) => {
+  sectionTripPoints.innerHTML = ``;
   const fragment = document.createDocumentFragment();
 
   for (const it of data.points) {
@@ -32,25 +27,57 @@ const renderPointTrip = (data) => {
 
     pointTrip.onEdit = () => {
       editPointTrip.render();
-      tripItems.replaceChild(editPointTrip.element, pointTrip.element);
+      container.querySelector(`.trip-day__items`).replaceChild(editPointTrip.element, pointTrip.element);
       pointTrip.unRender();
     };
 
     editPointTrip.onSubmit = (newObject) => {
+      editPointTrip.block();
+      editPointTrip.changeColorBorder(false);
+      editPointTrip.onTextButtonChange(message.saving, `save`);
       it.offers = newObject.offers;
       it.price = newObject.price;
       it.type = newObject.type;
       it.time = newObject.time;
+      it.timeStart = newObject.timeStart;
+      it.timeEnd = newObject.timeEnd;
+      it.destination = newObject.destination;
 
-      pointTrip.update(it);
-      pointTrip.render();
-      tripItems.replaceChild(pointTrip.element, editPointTrip.element);
-      editPointTrip.unRender();
+      api.updateTask({id: it.id, data: it.toRAW()})
+        .then((newTask) => {
+          pointTrip.update(newTask);
+          pointTrip.render();
+          container.querySelector(`.trip-day__items`).replaceChild(pointTrip.element, editPointTrip.element);
+          editPointTrip.unblock();
+          editPointTrip.unRender();
+        })
+        .catch(() => {
+          editPointTrip.unblock();
+          editPointTrip.onTextButtonChange(message.save, `save`);
+          editPointTrip.changeColorBorder();
+          editPointTrip.shake();
+        });
     };
 
-    editPointTrip.onDelete = () => {
-      it.display = false;
-      editPointTrip.unRender();
+    editPointTrip.onDelete = ({id}) => {
+      editPointTrip.block();
+      editPointTrip.changeColorBorder(false);
+      editPointTrip.onTextButtonChange(message.deleting, `delete`);
+
+      api.deleteTask({id})
+        .then(() => Promise.all([api.loadPoints(), api.loadDestinations(), api.loadOffers()])
+          .then(([points, destinations, offers]) => {
+            dataTrips.points = points;
+            dataTrips.offers = offers;
+            dataTrips.destinations = destinations;
+            sectionTripPoints.appendChild(getTripDays(dataTrips));
+          }))
+          .catch(() => {
+            editPointTrip.unblock();
+            editPointTrip.onTextButtonChange(message.delete, `delete`);
+            editPointTrip.changeColorBorder();
+            editPointTrip.shake();
+          });
     };
 
     editPointTrip.onChangeDestination = (evt) => {
@@ -63,15 +90,14 @@ const renderPointTrip = (data) => {
     };
   }
 
-  tripItems.appendChild(fragment);
+  return fragment;
 
 };
 
 Promise.all([api.loadPoints(), api.loadDestinations(), api.loadOffers()])
 
   .then(([points, destinations, offers]) => {
-    tripItems.innerHTML = ``;
-
+    sectionTripPoints.innerHTML = ``;
     dataTrips.points = points;
     dataTrips.offers = offers;
     dataTrips.destinations = destinations;
@@ -85,21 +111,16 @@ Promise.all([api.loadPoints(), api.loadDestinations(), api.loadOffers()])
 
     filters.onChange = (evt) => {
       dataTrips.points = filters.filterPoint(points, evt.target.id);
-      renderPointTrip(dataTrips, tripItems);
+      sectionTripPoints.appendChild(getTripDays(dataTrips, renderPointTrip));
     };
 
+    sectionTripPoints.appendChild(getTripDays(dataTrips, renderPointTrip));
 
-    renderPointTrip(dataTrips);
-
-    //openStats();
-
-    //renderMoneyChart(points);
-    //renderTransportChart(points);
+    openStats();
+    renderMoneyChart(points);
+    renderTransportChart(points);
 
   }).catch(() => {
-    tripItems.innerHTML = message.loadFail;
+    sectionTripPoints.innerHTML = message.loadFail;
   });
-
-dataNow.innerHTML = moment(getTimeIsNow(), `x`).format(`MMM DD`);
-
 

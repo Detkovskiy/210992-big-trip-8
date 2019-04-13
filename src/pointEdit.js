@@ -6,13 +6,14 @@ export class EditTrip extends Component {
   constructor(data) {
     super();
     this._id = data.it.id;
+    this._isFavorite = data.it.isFavorite;
     this._type = data.it.type;
     this._timeStart = data.it.timeStart;
     this._timeEnd = data.it.timeEnd;
     this._price = data.it.price;
     this._offers = data.it.offers;
-    this._description = data.it.destination;
-    this._descriptionDatalistNames = data.data.destinations;
+    this._destination = data.it.destination;
+    this._allDescriptions = data.data.destinations;
     this._allOffers = data.data.offers;
     this._onEdit = null;
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
@@ -51,9 +52,9 @@ export class EditTrip extends Component {
             
                   <div class="point__destination-wrap">
                     <label class="point__destination-label" for="destination">${this._type} to</label>
-                    <input class="point__destination-input" list="destination-select" id="destination" value="${this._description.name}" name="destination">
+                    <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination.name}" name="destination">
                     <datalist id="destination-select">
-                      ${this._descriptionDatalistNames.map((it) => ` 
+                      ${this._allDescriptions.map((it) => ` 
                         <option value="${it.name}"></option>`).join(``)}                 
                     </datalist>
                   </div>
@@ -116,13 +117,7 @@ export class EditTrip extends Component {
 
   set description(data) {
     if (data) {
-      this._description = data;
-    }
-  }
-
-  set offers(data) {
-    if (data) {
-      this._offers = data;
+      this._destination = data;
     }
   }
 
@@ -132,6 +127,39 @@ export class EditTrip extends Component {
     }
   }
 
+  block() {
+    const formInputs = Array.from(this._element.querySelector(`form`).querySelectorAll(`input`));
+    const formButtons = Array.from(this._element.querySelector(`form`).querySelectorAll(`button`));
+
+    formButtons.concat(formInputs).forEach((item) => {
+      item.setAttribute(`disabled`, `disabled`);
+    });
+  }
+
+  unblock() {
+    const formInputs = Array.from(this._element.querySelector(`form`).querySelectorAll(`input`));
+    const formButtons = Array.from(this._element.querySelector(`form`).querySelectorAll(`button`));
+
+    formButtons.concat(formInputs).forEach((item) => {
+      item.removeAttribute(`disabled`);
+    });
+  }
+
+  onTextButtonChange(text, evtButton) {
+    this._element.querySelector(`.point__button--${evtButton}`).innerText = text;
+  }
+
+  changeColorBorder(change = true) {
+    if (change) {
+      this.element.classList.add(`error`);
+    } else {
+      this.element.classList.remove(`error`);
+    }
+  }
+
+  shake() {
+    this.element.classList.add(`shake`);
+  }
 
   set onChangeTravelType(fn) {
     if (typeof fn === `function`) {
@@ -143,40 +171,46 @@ export class EditTrip extends Component {
     this._price = data.price;
     this._offers = data.offers;
     this._type = data.type;
-    this._timeStart = data.time[0];
-    this._timeEnd = data.time[1];
+    this._timeStart = data.timeStart;
+    this._timeEnd = data.timeEnd;
   }
 
   static createMapper(target) {
     return {
-      'price': (value) => {
-        target.price = value;
-      },
-      'offer': (value) => {
-        target.offers[value] = true;
-      },
       'travel-way': (value) => {
         target.type = value;
       },
+      'price': (value) => {
+        target.price = value;
+
+      },
+      'offer': (value) => {
+        const offers = target.allOffers.find((item) => item.type === target.type).offers;
+        const offerPrice = offers.find((item) => item.name === value).price;
+        target.offers.push({title: value, accepted: true, price: offerPrice});
+      },
+      'destination': (value) => {
+        target.destination = target.destination.find((item) => item.name === value);
+      },
       'date-start': (value) => {
-        target.time.push(moment(value, `HH:mm`).format(`x`));
+        target.timeStart = moment(value, `HH:mm`).format(`x`);
       },
       'date-end': (value) => {
-        target.time.push(moment(value, `HH:mm`).format(`x`));
+        target.timeEnd = moment(value, `HH:mm`).format(`x`);
       }
     };
   }
 
-  static processForm(formData) {
+  processForm(formData) {
     const entry = {
+      id: this._id,
+      type: ``,
       price: null,
-      time: [],
-      offers: {
-        'add-luggage': false,
-        'switch-to-comfort-class': false,
-        'add-meal': false,
-        'choose-seats': false
-      }
+      offers: [],
+      allOffers: this._allOffers,
+      destination: this._allDescriptions,
+      timeStart: this._timeStart,
+      timeEnd: this._timeEnd
     };
 
     const taskEditMapper = EditTrip.createMapper(entry);
@@ -196,11 +230,13 @@ export class EditTrip extends Component {
     evt.preventDefault();
 
     const formData = new FormData(this._element.querySelector(`.editPoint`));
-    const newData = EditTrip.processForm(formData);
+
+    const newData = this.processForm(formData);
 
     if (typeof this._onSubmit === `function`) {
       this._onSubmit(newData);
     }
+
 
     this.update(newData);
   }
@@ -208,7 +244,7 @@ export class EditTrip extends Component {
   _onDeleteButtonClick(evt) {
     evt.preventDefault();
     if (typeof this._onDelete === `function`) {
-      this._onDelete();
+      this._onDelete({id: this._id});
     }
   }
 
@@ -220,21 +256,25 @@ export class EditTrip extends Component {
   _getDestinationTemplate() {
     return `
       <div>
-        <h3 class="point__details-title">${this._description.name}</h3>
-        <p class="point__destination-text">${this._description.description}</p>
+        <h3 class="point__details-title">${this._destination.name}</h3>
+        <p class="point__destination-text">${this._destination.description}</p>
         <div class="point__destination-images">
-        ${this._description.pictures.map((it) => ` 
+        ${this._destination.pictures.map((it) => ` 
           <img src="${it.src}" alt="${it.description}" class="point__destination-image">`).join(``)}
       </div>`;
   }
 
   _getOffersTemplate() {
-    return `
+    if (this._type !== `drive`) {
+      return `
       ${this._allOffers.find((item) => item.type === this._type).offers.map((it) => ` 
         <input class="point__offers-input visually-hidden" type="checkbox" id="${it.name}" name="offer" value="${it.name}" ${this._offers.find((offer) => offer.title === it.name && offer.accepted) ? `checked` : ``}>
         <label for="${it.name}" class="point__offers-label">
           <span class="point__offer-service">${it.name}</span> + €<span class="point__offer-price">${it.price}</span>
         </label>`).join(``)}`;
+    } else {
+      return ``;
+    }
   }
 
   _onSelectTypeTravel(evt) {
@@ -254,6 +294,7 @@ export class EditTrip extends Component {
       enableTime: true,
       noCalendar: true,
       dateFormat: `H:i`,
+      defaultDate: +this._timeStart,
       [`time_24hr`]: true
     });
 
@@ -261,6 +302,7 @@ export class EditTrip extends Component {
       enableTime: true,
       noCalendar: true,
       dateFormat: `H:i`,
+      defaultDate: +this._timeEnd,
       [`time_24hr`]: true
     });
   }

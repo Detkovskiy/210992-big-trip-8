@@ -42,6 +42,21 @@ export class API {
       .then(toJSON);
   }
 
+  updateTask({id, data}) {
+    return this._load({
+      url: `points/${id}`,
+      method: Method.PUT,
+      body: JSON.stringify(data),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+      .then(toJSON)
+      .then(ModelPoint.parsePoint);
+  }
+
+  deleteTask({id}) {
+    return this._load({url: `points/${id}`, method: Method.DELETE});
+  }
+
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
 
     headers.append(`Authorization`, this._authorization);

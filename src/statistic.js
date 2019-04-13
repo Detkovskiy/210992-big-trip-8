@@ -11,7 +11,6 @@ transportCtx.height = BAR_HEIGHT * 4;
 timeSpendCtx.height = BAR_HEIGHT * 4;
 
 const renderMoneyChart = (data) => {
-
   const getMoneyChartData = (arr) => {
     const arrTypePoint = [];
     const arrPricePoint = [];
@@ -19,7 +18,7 @@ const renderMoneyChart = (data) => {
     arr.forEach(function ([item, price]) {
       if (arrTypePoint.indexOf(item) === -1) {
         arrTypePoint.push(item);
-        arrPricePoint[arrTypePoint.indexOf(item)] = price;
+        arrPricePoint[arrTypePoint.indexOf(item)] = +price;
       } else {
         arrPricePoint[arrTypePoint.indexOf(item)] += price;
       }
@@ -27,7 +26,11 @@ const renderMoneyChart = (data) => {
 
     return {arrTypePoint, arrPricePoint};
   };
-  const moneyChartData = getMoneyChartData(data.map((it) => [trips.icons[it.type] + it.type.toUpperCase(), it.base_price]));
+  const moneyChartData = getMoneyChartData(data.map((it) => {
+    return [/*trips.icons[it.type] + */it.type.toUpperCase(), it.price];
+  }
+
+  ));
 
   return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
@@ -114,7 +117,7 @@ const renderTransportChart = (data) => {
   };
 
 
-  const transportChartData = getTransportChartData(data.map((it) => trips.icons[it.type] + it.type.toUpperCase()));
+  const transportChartData = getTransportChartData(data.map((it) => /*trips.icons[it.type] + */it.type.toUpperCase()));
 
 
   return new Chart(transportCtx, {

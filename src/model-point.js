@@ -13,11 +13,11 @@ export class ModelPoint {
   toRAW() {
     return {
       'id': this.id,
-      'type': this.type.title,
+      'base_price': this.price,
+      'type': this.type,
       'date_from': this.timeStart,
       'date_to': this.timeEnd,
       'destination': this.destination,
-      'base_price': this.price,
       'is_favorite': this.isFavorite,
       'offers': this.offers
     };

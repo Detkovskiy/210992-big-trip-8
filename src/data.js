@@ -19,7 +19,11 @@ const dataTrips = {
 
 const message = {
   loadData: `Loading route...`,
-  loadFail: `Something went wrong while loading your route info. Check your connection or try again later`
+  loadFail: `Something went wrong while loading your route info. Check your connection or try again later`,
+  saving: `Saving...`,
+  deleting: `Deleting...`,
+  save: `Save`,
+  delete: `Delete`
 };
 
 export {filtersName, dataTrips, message};

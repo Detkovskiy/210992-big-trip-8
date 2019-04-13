@@ -48,7 +48,40 @@ const openStats = () => {
   }
 };
 
-/* Временная функция для проверки фильтров. Устанавливает время на 6 утра */
-const getTimeIsNow = () => moment().startOf(`day`).add(6, `hours`).format(`x`);
+const getTripDays = (data, getRenderPointTrip) => {
+  const points = data.points;
 
-export {getRandomFromInterval, getRandomArr, getRandomDescription, createElement, getTimeIsNow, openStats};
+  const getTripDayTemplate = (date, number) => {
+    return `<section class="trip-day">
+      <article class="trip-day__info">
+        <span class="trip-day__caption">Day</span>
+        <p class="trip-day__number">${number + 1}</p>
+        <h2 class="trip-day__title">${date}</h2>
+      </article>
+
+      <div class="trip-day__items">
+      </div>
+    </section>`;
+  };
+
+  const fragment = document.createDocumentFragment();
+  const countDaysForTrip = new Set(data.points.map((item) => moment(item.timeStart, `x`).format(`MMM D`)));
+
+  Array.from(countDaysForTrip).forEach((day, index) => {
+
+    const tripDay = createElement(getTripDayTemplate(day, index));
+
+    data.points = points.filter((it) => moment(it.timeStart, `x`).format(`MMM D`) === day);
+
+    tripDay.querySelector(`.trip-day__items`).appendChild(getRenderPointTrip(data, tripDay));
+
+    fragment.appendChild(tripDay);
+  });
+
+  return fragment;
+};
+
+/* Временная функция для проверки фильтров */
+const getTimeIsNow = () => moment().format(`x`);
+
+export {getRandomFromInterval, getRandomArr, getTripDays, createElement, getTimeIsNow, openStats};

@@ -36,7 +36,7 @@ export class Filter {
         break;
 
       case `filter-past`:
-        sortData = data.filter((it) => it.timeEnd < getTimeIsNow());
+        sortData = data.filter((it) => it.timeStart < getTimeIsNow());
     }
     return sortData;
   }
