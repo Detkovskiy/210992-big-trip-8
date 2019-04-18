@@ -4,6 +4,7 @@ import flatpickr from "flatpickr";
 
 export class EditTrip extends Component {
   constructor(data) {
+   // console.log(data);
     super();
     this._id = data.it.id;
     this._isFavorite = data.it.isFavorite;
@@ -13,9 +14,11 @@ export class EditTrip extends Component {
     this._price = data.it.price;
     this._offers = data.it.offers;
     this._destination = data.it.destination;
-    this._allDescriptions = data.data.destinations;
-    this._allOffers = data.data.offers;
+    this._allDescriptions = data.destinations;
+    this._allOffers = data.offers;
     this._onEdit = null;
+    this._onEscKeydown = this._onEscKeydown.bind(this);
+
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
     this._onDestinationChange = this._onDestinationChange.bind(this);
@@ -119,6 +122,10 @@ export class EditTrip extends Component {
     if (data) {
       this._destination = data;
     }
+  }
+
+  set onCancel(fn) {
+    this._onCancel = fn;
   }
 
   set type(data) {
@@ -283,7 +290,16 @@ export class EditTrip extends Component {
     this._element.querySelector(`.point__offers-wrap`).innerHTML = this._getOffersTemplate();
   }
 
+  _onEscKeydown(evt) {
+    if (evt.keyCode === 27) {
+      this._onCancel();
+    }
+  }
+
   bind() {
+    document.addEventListener(`keydown`, this._onEscKeydown);
+
+
     this._element.querySelector(`.point__button--save`).addEventListener(`click`, this._onSubmitButtonClick);
     this._element.querySelector(`.point__button--delete`).addEventListener(`click`, this._onDeleteButtonClick);
     this._element.querySelector(`.point__destination-input`).addEventListener(`change`, this._onDestinationChange);

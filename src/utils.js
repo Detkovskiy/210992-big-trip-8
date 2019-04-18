@@ -1,6 +1,8 @@
 import moment from 'moment';
 
 const getRandomFromInterval = (min, max) => Math.floor(Math.random() * (max - min) + min);
+const sectionTripPoints = document.querySelector(`.trip-points`);
+
 
 const getRandomArr = (count, arr) => {
   const randomArr = [];
@@ -50,6 +52,7 @@ const openStats = () => {
 
 const getTripDays = (data, getRenderPointTrip) => {
   const points = data.points;
+  const copyData = Object.assign({}, data);
 
   const getTripDayTemplate = (date, number) => {
     return `<section class="trip-day">
@@ -70,10 +73,9 @@ const getTripDays = (data, getRenderPointTrip) => {
   Array.from(countDaysForTrip).forEach((day, index) => {
 
     const tripDay = createElement(getTripDayTemplate(day, index));
+    copyData.points = points.filter((it) => moment(it.timeStart, `x`).format(`MMM D`) === day);
 
-    data.points = points.filter((it) => moment(it.timeStart, `x`).format(`MMM D`) === day);
-
-    tripDay.querySelector(`.trip-day__items`).appendChild(getRenderPointTrip(data, tripDay));
+    tripDay.querySelector(`.trip-day__items`).appendChild(getRenderPointTrip(copyData, tripDay));
 
     fragment.appendChild(tripDay);
   });
@@ -81,7 +83,19 @@ const getTripDays = (data, getRenderPointTrip) => {
   return fragment;
 };
 
+const allPointsPrice = (dataPointsPrice) => {
+  let pointsPrice = dataPointsPrice.reduce((accumulator, currentValue) => accumulator + +currentValue.price, 0);
+
+  dataPointsPrice.map((it) => {
+    if (it.offers.find((offer) => offer.accepted)) {
+      pointsPrice += it.offers.reduce((accumulator, currentValue) => accumulator + currentValue.price, 0);
+    }
+  });
+
+  return pointsPrice;
+};
+
 /* Временная функция для проверки фильтров */
 const getTimeIsNow = () => moment().format(`x`);
 
-export {getRandomFromInterval, getRandomArr, getTripDays, createElement, getTimeIsNow, openStats};
+export {getRandomFromInterval, getRandomArr, getTripDays, createElement, getTimeIsNow, openStats, sectionTripPoints, allPointsPrice};

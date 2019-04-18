@@ -53,6 +53,16 @@ export class API {
       .then(ModelPoint.parsePoint);
   }
 
+  create(point) {
+    return this._load({
+      url: `points`,
+      method: Method.POST,
+      body: JSON.stringify(point),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+      .then(toJSON);
+  }
+
   deleteTask({id}) {
     return this._load({url: `points/${id}`, method: Method.DELETE});
   }
