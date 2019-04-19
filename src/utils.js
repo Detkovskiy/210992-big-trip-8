@@ -1,7 +1,9 @@
 import moment from 'moment';
 
-const getRandomFromInterval = (min, max) => Math.floor(Math.random() * (max - min) + min);
 const sectionTripPoints = document.querySelector(`.trip-points`);
+
+const getRandomFromInterval = (min, max) => Math.floor(Math.random() * (max - min) + min);
+
 
 
 const getRandomArr = (count, arr) => {

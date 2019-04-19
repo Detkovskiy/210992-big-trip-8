@@ -26,10 +26,18 @@ export class API {
     this._authorization = authorization;
   }
 
+  loadAllData() {
+    return Promise.all([
+      this.loadPoints(),
+      this.loadOffers(),
+      this.loadDestinations()
+    ]);
+  }
+
   loadPoints() {
     return this._load({url: `points`})
       .then(toJSON)
-      .then(ModelPoint.parsePoints);
+     // .then(ModelPoint.parsePoints);
   }
 
   loadOffers() {

@@ -7,6 +7,8 @@ import {API} from './api.js';
 import {sortingPoints} from './sortingPoints';
 import {renderMoneyChart, renderTransportChart} from '../src/statistic.js';
 import {ModelPoint} from './model-point';
+import {Model} from './model';
+import {createElement} from "../src/utils";
 
 
 const tripFilter = document.querySelector(`.trip-filter`);
@@ -16,8 +18,61 @@ const tripTotalCost = document.querySelector(`.trip__total-cost`);
 
 const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZsxAoszz=`;
 const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
-
 const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
+
+
+const renderPoints = (dayPoints) => {
+  const fragmentPointsDay = document.createDocumentFragment();
+
+  dayPoints.map((point) => {
+    const pointTrip = new PointTrip(point);
+
+    fragmentPointsDay.appendChild(pointTrip.render());
+  });
+
+  return fragmentPointsDay;
+};
+
+const getTripDayTemplate = (day, count) => {
+  return `<section class="trip-day">
+      <article class="trip-day__info">
+        <span class="trip-day__caption">Day</span>
+        <p class="trip-day__number">${count + 1}</p>
+        <h2 class="trip-day__title">${day}</h2>
+      </article>
+
+      <div class="trip-day__items">
+      </div>
+    </section>`;
+};
+
+
+
+const renderPointTrip = ({points, offers, destinations}) => {
+  sectionTripPoints.innerHTML = ``;
+  const fragment = document.createDocumentFragment();
+
+  Object.keys(points).forEach((day, count) => {
+    const pointsOfDay = points[day];
+    const tripDay = createElement(getTripDayTemplate(day, count));
+
+    tripDay.querySelector(`.trip-day__items`).appendChild(renderPoints(pointsOfDay));
+    fragment.appendChild(tripDay);
+  });
+
+  return fragment;
+};
+
+const model = new Model({api, render: renderPointTrip});
+model.init();
+model.update();
+
+
+
+
+
+
+/*
 
 const getNewPointForm = ({points, destinations, offers}) => {
   const it = getDefaultDataNewPoint(points);
@@ -66,7 +121,10 @@ const getNewPointForm = ({points, destinations, offers}) => {
 
   return newPoint;
 };
+*/
 
+
+/*
 sectionTripPoints.innerHTML = message.loadData;
 
 const renderPointTrip = ({points, destinations, offers}, container) => {
@@ -191,3 +249,4 @@ Promise.all([api.loadPoints(), api.loadDestinations(), api.loadOffers()])
     sectionTripPoints.innerHTML = message.loadFail;
   });
 
+*/
