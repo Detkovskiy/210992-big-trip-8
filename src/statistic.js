@@ -1,9 +1,15 @@
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import {model} from "./model";
 
 const moneyCtx = document.querySelector(`.statistic__money`);
 const transportCtx = document.querySelector(`.statistic__transport`);
 const timeSpendCtx = document.querySelector(`.statistic__time-spend`);
+
+const mainBlock = document.querySelector(`.main`);
+const statBlock = document.querySelector(`.statistic`);
+const statsTrigger = document.querySelector(`a[href*=stat]`);
+const tripTrigger = document.querySelector(`a[href*=table]`);
 
 const BAR_HEIGHT = 55;
 moneyCtx.height = BAR_HEIGHT * 4;
@@ -186,4 +192,27 @@ const renderTransportChart = (data) => {
   });
 };
 
-export {renderMoneyChart, renderTransportChart};
+const statisticInit = () => {
+  statsTrigger.addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+
+    mainBlock.classList.add(`visually-hidden`);
+    tripTrigger.classList.remove(`view-switch__item--active`);
+    statsTrigger.classList.add(`view-switch__item--active`);
+    statBlock.classList.remove(`visually-hidden`);
+
+    renderMoneyChart(model.dataStat);
+    renderTransportChart(model.dataStat);
+  });
+
+  tripTrigger.addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+
+    statBlock.classList.add(`visually-hidden`);
+    tripTrigger.classList.add(`view-switch__item--active`);
+    mainBlock.classList.remove(`visually-hidden`);
+    statsTrigger.classList.remove(`view-switch__item--active`);
+  });
+};
+
+export {statisticInit};

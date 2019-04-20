@@ -4,7 +4,6 @@ import flatpickr from "flatpickr";
 
 export class EditTrip extends Component {
   constructor(data) {
-   // console.log(data);
     super();
     this._id = data.it.id;
     this._isFavorite = data.it.isFavorite;
@@ -14,8 +13,8 @@ export class EditTrip extends Component {
     this._price = data.it.price;
     this._offers = data.it.offers;
     this._destination = data.it.destination;
-    this._allDescriptions = data.destinations;
-    this._allOffers = data.offers;
+    this._allDescriptions = data.dayPoints.destinations;
+    this._allOffers = data.dayPoints.offers;
     this._onEdit = null;
     this._onEscKeydown = this._onEscKeydown.bind(this);
 
@@ -188,7 +187,7 @@ export class EditTrip extends Component {
         target.type = value;
       },
       'price': (value) => {
-        target.price = value;
+        target.price = +value;
 
       },
       'offer': (value) => {

@@ -1,11 +1,12 @@
 import {sectionTripPoints} from "./utils";
-import {message} from "./data";
+import {api, message} from "./data";
 import {ModelPoint} from './model-point';
 import moment from "moment";
+import {renderPointTrip} from "./point/render-points";
 
-export class Model {
-  constructor({api, render}) {
-    this._api = api;
+class Model {
+  constructor({ApiLoad, render}) {
+    this._api = ApiLoad;
     this._render = render;
     this._state = {
       data: {
@@ -36,6 +37,7 @@ export class Model {
   init() {
     this._api.loadAllData()
       .then(([points, offers, destinations]) => {
+        this._state.data.forStat = ModelPoint.parsePoints(points);
         this._state.data.points = this.adaptData(ModelPoint.parsePoints(points));
         this._state.data.offers = offers;
         this._state.data.destinations = destinations;
@@ -49,8 +51,21 @@ export class Model {
       });
   }
 
-  get allData() {
-    return this._state.data;
+  // пока так, массив без адаптации, надо переписывать код в статистике
+  get dataStat() {
+    return this._state.data.forStat;
+  }
+
+  get points() {
+    return this._state.data.points;
+  }
+
+  get offers() {
+    return this._state.data.offers;
+  }
+
+  get destinations() {
+    return this._state.data.destinations;
   }
 
   update() {
@@ -64,3 +79,6 @@ export class Model {
   }
 }
 
+const model = new Model({ApiLoad: api, render: renderPointTrip});
+
+export {model};

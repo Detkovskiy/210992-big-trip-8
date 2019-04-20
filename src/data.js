@@ -1,16 +1,9 @@
 import moment from 'moment';
-const filtersName = [
-  {
-    label: `everything`,
-  },
-  {
-    label: `future`,
-  },
-  {
-    label: `past`,
-  }
-];
+import {Api} from "./api";
 
+const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZsxAszz=`;
+const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
+const api = new Api({endPoint: END_POINT, authorization: AUTHORIZATION});
 
 const dataTrips = {
   points: [],
@@ -44,4 +37,4 @@ const getDefaultDataNewPoint = (arrPoints) => {
   };
 };
 
-export {filtersName, dataTrips, message, getDefaultDataNewPoint};
+export {dataTrips, message, getDefaultDataNewPoint, api};

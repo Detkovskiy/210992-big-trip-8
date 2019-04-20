@@ -1,4 +1,5 @@
-import {createElement, getTimeIsNow} from "./utils";
+import {createElement} from "../utils";
+import moment from 'moment';
 
 export class Filter {
   constructor() {
@@ -24,7 +25,6 @@ export class Filter {
 
   filterPoint(data, filterName) {
     let sortData = [];
-
     switch (filterName) {
 
       case `filter-everything`:
@@ -32,12 +32,13 @@ export class Filter {
         break;
 
       case `filter-future`:
-        sortData = data.filter((it) => it.timeStart > getTimeIsNow());
+        sortData = data.filter((it) => it > moment().format(`D MMM`));
         break;
 
       case `filter-past`:
-        sortData = data.filter((it) => it.timeStart < getTimeIsNow());
+        sortData = data.filter((it) => it < moment().format(`D MMM`));
     }
+
     return sortData;
   }
 

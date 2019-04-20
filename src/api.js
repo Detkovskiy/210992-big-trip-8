@@ -20,7 +20,7 @@ const toJSON = (response) => {
   return response.json();
 };
 
-export class API {
+export class Api {
   constructor({endPoint, authorization}) {
     this._endPoint = endPoint;
     this._authorization = authorization;
@@ -36,8 +36,7 @@ export class API {
 
   loadPoints() {
     return this._load({url: `points`})
-      .then(toJSON)
-     // .then(ModelPoint.parsePoints);
+      .then(toJSON);
   }
 
   loadOffers() {

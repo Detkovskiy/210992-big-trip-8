@@ -1,76 +1,19 @@
-import {PointTrip} from './make-point.js';
-import {EditTrip} from './pointEdit';
-import {Filter} from './filter';
-import {getTripDays, openStats, sectionTripPoints, allPointsPrice} from '../src/utils.js';
-import {filtersName, dataTrips, message, getDefaultDataNewPoint} from '../src/data.js';
-import {API} from './api.js';
-import {sortingPoints} from './sortingPoints';
-import {renderMoneyChart, renderTransportChart} from '../src/statistic.js';
-import {ModelPoint} from './model-point';
-import {Model} from './model';
-import {createElement} from "../src/utils";
+import {renderFilter} from './filters/render-filters';
+import {allPointsPrice} from '../src/utils.js';
+import {statisticInit} from '../src/statistic.js';
+import {model} from './model';
 
-
-const tripFilter = document.querySelector(`.trip-filter`);
 const newEventPoint = document.querySelector(`.new-event`);
 const tripTotalCost = document.querySelector(`.trip__total-cost`);
 
+renderFilter();
 
-const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZsxAoszz=`;
-const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
-const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
-
-
-const renderPoints = (dayPoints) => {
-  const fragmentPointsDay = document.createDocumentFragment();
-
-  dayPoints.map((point) => {
-    const pointTrip = new PointTrip(point);
-
-    fragmentPointsDay.appendChild(pointTrip.render());
-  });
-
-  return fragmentPointsDay;
-};
-
-const getTripDayTemplate = (day, count) => {
-  return `<section class="trip-day">
-      <article class="trip-day__info">
-        <span class="trip-day__caption">Day</span>
-        <p class="trip-day__number">${count + 1}</p>
-        <h2 class="trip-day__title">${day}</h2>
-      </article>
-
-      <div class="trip-day__items">
-      </div>
-    </section>`;
-};
-
-
-
-const renderPointTrip = ({points, offers, destinations}) => {
-  sectionTripPoints.innerHTML = ``;
-  const fragment = document.createDocumentFragment();
-
-  Object.keys(points).forEach((day, count) => {
-    const pointsOfDay = points[day];
-    const tripDay = createElement(getTripDayTemplate(day, count));
-
-    tripDay.querySelector(`.trip-day__items`).appendChild(renderPoints(pointsOfDay));
-    fragment.appendChild(tripDay);
-  });
-
-  return fragment;
-};
-
-const model = new Model({api, render: renderPointTrip});
 model.init();
 model.update();
 
+statisticInit();
 
-
-
-
+// старый код
 
 /*
 
@@ -123,93 +66,8 @@ const getNewPointForm = ({points, destinations, offers}) => {
 };
 */
 
-
 /*
 sectionTripPoints.innerHTML = message.loadData;
-
-const renderPointTrip = ({points, destinations, offers}, container) => {
-  sectionTripPoints.innerHTML = ``;
-  const fragment = document.createDocumentFragment();
-
-  for (const it of points) {
-    const pointTrip = new PointTrip(it);
-    const editPointTrip = new EditTrip({it, destinations, offers});
-    fragment.appendChild(pointTrip.render());
-
-    pointTrip.onEdit = () => {
-      editPointTrip.render();
-      container.querySelector(`.trip-day__items`).replaceChild(editPointTrip.element, pointTrip.element);
-      pointTrip.unRender();
-    };
-
-    editPointTrip.onSubmit = (newObject) => {
-      editPointTrip.block();
-      editPointTrip.changeColorBorder(false);
-      editPointTrip.onTextButtonChange(message.saving, `save`);
-      it.offers = newObject.offers;
-      it.price = newObject.price;
-      it.type = newObject.type;
-      it.time = newObject.time;
-      it.timeStart = newObject.timeStart;
-      it.timeEnd = newObject.timeEnd;
-      it.destination = newObject.destination;
-
-      api.updateTask({id: it.id, data: it.toRAW()})
-        .then((newTask) => {
-          pointTrip.update(newTask);
-          pointTrip.render();
-          container.querySelector(`.trip-day__items`).replaceChild(pointTrip.element, editPointTrip.element);
-          editPointTrip.unblock();
-          editPointTrip.unRender();
-        })
-        .catch(() => {
-          editPointTrip.unblock();
-          editPointTrip.onTextButtonChange(message.save, `save`);
-          editPointTrip.changeColorBorder();
-          editPointTrip.shake();
-        });
-    };
-
-    editPointTrip.onCancel = () => {
-      pointTrip.render();
-      container.querySelector(`.trip-day__items`).replaceChild(pointTrip.element, editPointTrip.element);
-      editPointTrip.unRender();
-    };
-
-    editPointTrip.onDelete = ({id}) => {
-      editPointTrip.block();
-      editPointTrip.changeColorBorder(false);
-      editPointTrip.onTextButtonChange(message.deleting, `delete`);
-
-      api.deleteTask({id})
-        .then(() => Promise.all([api.loadPoints(), api.loadDestinations(), api.loadOffers()])
-          .then(([pointss, destinationss, offerss]) => {
-            dataTrips.points = pointss;
-            dataTrips.offers = offerss;
-            dataTrips.destinations = destinationss;
-            sectionTripPoints.appendChild(getTripDays(dataTrips));
-          }))
-          .catch(() => {
-            editPointTrip.unblock();
-            editPointTrip.onTextButtonChange(message.delete, `delete`);
-            editPointTrip.changeColorBorder();
-            editPointTrip.shake();
-          });
-    };
-
-    editPointTrip.onChangeDestination = (evt) => {
-      editPointTrip.description = destinations.find((item) => item.name === evt.target.value);
-    };
-
-    editPointTrip.onChangeTravelType = (evt) => {
-      editPointTrip.type = evt.target.value;
-
-    };
-  }
-
-  return fragment;
-
-};
 
 Promise.all([api.loadPoints(), api.loadDestinations(), api.loadOffers()])
 
