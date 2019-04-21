@@ -13,8 +13,8 @@ export class EditTrip extends Component {
     this._price = data.it.price;
     this._offers = data.it.offers;
     this._destination = data.it.destination;
-    this._allDescriptions = data.dayPoints.destinations;
-    this._allOffers = data.dayPoints.offers;
+    this._allDescriptions = data.data.destinations;
+    this._allOffers = data.data.offers;
     this._onEdit = null;
     this._onEscKeydown = this._onEscKeydown.bind(this);
 
@@ -30,7 +30,7 @@ export class EditTrip extends Component {
                 <header class="point__header">
                   <label class="point__date">
                     choose day
-                    <input class="point__input" type="text" placeholder="MAR 18" name="day">
+                    <input class="point__input" type="text" placeholder="${moment(this._timeStart, `x`).format(`MMM D`)}" name="day">
                   </label>
             
                   <div class="travel-way">
@@ -54,7 +54,7 @@ export class EditTrip extends Component {
             
                   <div class="point__destination-wrap">
                     <label class="point__destination-label" for="destination">${this._type} to</label>
-                    <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination.name}" name="destination">
+                    <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination.name}" name="destination" required>
                     <datalist id="destination-select">
                       ${this._allDescriptions.map((it) => ` 
                         <option value="${it.name}"></option>`).join(``)}                 
@@ -198,11 +198,22 @@ export class EditTrip extends Component {
       'destination': (value) => {
         target.destination = target.destination.find((item) => item.name === value);
       },
+      'day': (value) => {
+        target.day = value;
+      },
       'date-start': (value) => {
-        target.timeStart = moment(value, `HH:mm`).format(`x`);
+        if (target.day) {
+          target.timeStart = moment(`${target.day} ${value}`, `MMM D hh:mm`).format(`x`);
+        } else {
+          target.timeStart = moment(value, `HH:mm`).format(`x`);
+        }
       },
       'date-end': (value) => {
-        target.timeEnd = moment(value, `HH:mm`).format(`x`);
+        if (target.day) {
+          target.timeEnd = moment(`${target.day} ${value}`, `MMM D hh:mm`).format(`x`);
+        } else {
+          target.timeEnd = moment(value, `HH:mm`).format(`x`);
+        }
       }
     };
   }
@@ -216,7 +227,8 @@ export class EditTrip extends Component {
       allOffers: this._allOffers,
       destination: this._allDescriptions,
       timeStart: this._timeStart,
-      timeEnd: this._timeEnd
+      timeEnd: this._timeEnd,
+      day: null
     };
 
     const taskEditMapper = EditTrip.createMapper(entry);
@@ -242,7 +254,6 @@ export class EditTrip extends Component {
     if (typeof this._onSubmit === `function`) {
       this._onSubmit(newData);
     }
-
 
     this.update(newData);
   }
@@ -319,6 +330,10 @@ export class EditTrip extends Component {
       dateFormat: `H:i`,
       defaultDate: +this._timeEnd,
       [`time_24hr`]: true
+    });
+
+    flatpickr(this._element.querySelector(`input[name="day"]`), {
+      dateFormat: `M j`,
     });
   }
 

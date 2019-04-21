@@ -20,9 +20,10 @@ class Model {
 
   adaptData(data) {
     const tripsForDays = {};
+    data.sort((a, b) => a.timeStart - b.timeStart);
 
     data.forEach((it) => {
-      const day = moment(it.timeStart).format(`D MMM`);
+      const day = moment(it.timeStart, `x`).format(`D MMM`);
 
       if (!tripsForDays[day]) {
         tripsForDays[day] = [];
@@ -37,11 +38,10 @@ class Model {
   init() {
     this._api.loadAllData()
       .then(([points, offers, destinations]) => {
-        this._state.data.forStat = ModelPoint.parsePoints(points);
+        this._state.data.noAdapt = ModelPoint.parsePoints(points);
         this._state.data.points = this.adaptData(ModelPoint.parsePoints(points));
         this._state.data.offers = offers;
         this._state.data.destinations = destinations;
-
         this._state.loading = false;
 
         this.update();
@@ -53,7 +53,11 @@ class Model {
 
   // пока так, массив без адаптации, надо переписывать код в статистике
   get dataStat() {
-    return this._state.data.forStat;
+    return this._state.data.noAdapt;
+  }
+
+  get allData() {
+    return this._state.data;
   }
 
   get points() {

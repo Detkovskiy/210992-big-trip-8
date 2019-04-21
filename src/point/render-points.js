@@ -5,13 +5,13 @@ import {api} from "../data";
 import {model} from '../model';
 import {createElement, getTripDayTemplate, sectionTripPoints} from "../utils";
 
-const renderPoints = (dayPoints, container) => {
+const renderPoints = (data, container) => {
   const fragmentPointsDay = document.createDocumentFragment();
 
-  dayPoints.pointsOneDay.map((it) => {
+  data.pointsOneDay.map((it) => {
 
     const pointTrip = new PointTrip(it);
-    const editPointTrip = new EditTrip({it, dayPoints});
+    const editPointTrip = new EditTrip({it, data});
 
     pointTrip.onEdit = () => {
       editPointTrip.render();
@@ -72,7 +72,7 @@ const renderPoints = (dayPoints, container) => {
     };
 
     editPointTrip.onChangeDestination = (evt) => {
-      editPointTrip.description = dayPoints.destinations.find((item) => item.name === evt.target.value);
+      editPointTrip.description = data.destinations.find((item) => item.name === evt.target.value);
     };
 
     editPointTrip.onChangeTravelType = (evt) => {

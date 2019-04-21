@@ -15,8 +15,8 @@ export class ModelPoint {
       'id': this.id,
       'base_price': this.price,
       'type': this.type,
-      'date_from': this.timeStart,
-      'date_to': this.timeEnd,
+      'date_from': +this.timeStart,
+      'date_to': +this.timeEnd,
       'destination': this.destination,
       'is_favorite': this.isFavorite,
       'offers': this.offers

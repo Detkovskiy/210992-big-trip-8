@@ -1,9 +1,10 @@
 import {renderFilter} from './filters/render-filters';
 import {allPointsPrice} from '../src/utils.js';
 import {statisticInit} from '../src/statistic.js';
+import {sortingPoints} from './sortingPoints';
+import {newPointInit} from './point/new-point';
 import {model} from './model';
 
-const newEventPoint = document.querySelector(`.new-event`);
 const tripTotalCost = document.querySelector(`.trip__total-cost`);
 
 renderFilter();
@@ -13,57 +14,16 @@ model.update();
 
 statisticInit();
 
+
+sortingPoints();
+
+newPointInit();
+
+
 // старый код
 
 /*
 
-const getNewPointForm = ({points, destinations, offers}) => {
-  const it = getDefaultDataNewPoint(points);
-
-  const newPoint = new EditTrip({it, destinations, offers});
-
-  newPoint.onChangeDestination = (evt) => {
-    newPoint.description = destinations.find((item) => item.name === evt.target.value);
-  };
-
-  newPoint.onChangeTravelType = (evt) => {
-    newPoint.type = evt.target.value;
-
-  };
-
-  newPoint.onSubmit = (newObject) => {
-    newPoint.block();
-    newPoint.changeColorBorder(false);
-    newPoint.onTextButtonChange(message.saving, `save`);
-    const dataSavePoint = {
-      'id': it.id,
-      'base_price': newObject.price,
-      'type': newObject.type,
-      'date_from': newObject.timeStart,
-      'date_to': newObject.timeEnd,
-      'destination': newObject.destination,
-      'is_favorite': it.isFavorite,
-      'offers': newObject.offers
-    };
-
-    api.create(dataSavePoint)
-      .then((newTask) => {
-        newPoint.update(newTask);
-        newPoint.unblock();
-        newPoint.unRender();
-        sectionTripPoints.appendChild(getTripDays(dataTrips, renderPointTrip));
-
-      })
-      .catch(() => {
-        newPoint.unblock();
-        newPoint.onTextButtonChange(message.save, `save`);
-        newPoint.changeColorBorder();
-        newPoint.shake();
-      });
-  };
-
-  return newPoint;
-};
 */
 
 /*
