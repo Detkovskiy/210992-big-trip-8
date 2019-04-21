@@ -1,4 +1,7 @@
+import {model} from './model';
+
 const sectionTripPoints = document.querySelector(`.trip-points`);
+const tripTotalCost = document.querySelector(`.trip__total-cost`);
 
 const createElement = (template) => {
   const newElement = document.createElement(`div`);
@@ -6,16 +9,27 @@ const createElement = (template) => {
   return newElement.firstChild;
 };
 
-const allPointsPrice = (dataPointsPrice) => {
-  let pointsPrice = dataPointsPrice.reduce((accumulator, currentValue) => accumulator + +currentValue.price, 0);
 
-  dataPointsPrice.map((it) => {
-    if (it.offers.find((offer) => offer.accepted)) {
-      pointsPrice += it.offers.reduce((accumulator, currentValue) => accumulator + currentValue.price, 0);
-    }
+const pointsPriceInit = () => {
+
+  let pointsPrice = 0;
+  let offersPrice = 0;
+
+  Object.keys(model.points).map((it) => {
+
+    model.points[it].map((i) => {
+      pointsPrice += i.price;
+
+      i.offers.map((j) => {
+
+        if (j.accepted) {
+          offersPrice += j.price;
+        }
+      });
+    });
   });
 
-  return pointsPrice;
+  tripTotalCost.innerHTML = `€ ${pointsPrice + offersPrice}`;
 };
 
 const getTripDayTemplate = (day, count) => {
@@ -31,4 +45,4 @@ const getTripDayTemplate = (day, count) => {
     </section>`;
 };
 
-export {getTripDayTemplate, createElement, sectionTripPoints, allPointsPrice};
+export {getTripDayTemplate, createElement, sectionTripPoints, pointsPriceInit};

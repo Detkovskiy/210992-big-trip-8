@@ -1,11 +1,10 @@
 import {renderFilter} from './filters/render-filters';
-import {allPointsPrice} from '../src/utils.js';
+import {pointsPriceInit} from '../src/utils.js';
 import {statisticInit} from '../src/statistic.js';
 import {sortingPoints} from './sortingPoints';
 import {newPointInit} from './point/new-point';
 import {model} from './model';
 
-const tripTotalCost = document.querySelector(`.trip__total-cost`);
 
 renderFilter();
 
@@ -39,7 +38,7 @@ Promise.all([api.loadPoints(), api.loadDestinations(), api.loadOffers()])
 
     sortingPoints(dataTrips, renderPointTrip);
 
-    tripTotalCost.innerHTML = `€ ${allPointsPrice(dataTrips.points)}`;
+    tripTotalCost.innerHTML = `€ ${pointsPriceInit(dataTrips.points)}`;
 
     const filters = new Filter();
     const renderFilter = () => {

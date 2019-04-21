@@ -3,7 +3,7 @@ import {EditTrip} from "../pointEdit";
 import {message} from "../data";
 import {api} from "../data";
 import {model} from '../model';
-import {createElement, getTripDayTemplate, sectionTripPoints} from "../utils";
+import {createElement, getTripDayTemplate, sectionTripPoints, pointsPriceInit} from "../utils";
 
 const renderPoints = (data, container) => {
   const fragmentPointsDay = document.createDocumentFragment();
@@ -38,6 +38,7 @@ const renderPoints = (data, container) => {
           container.querySelector(`.trip-day__items`).replaceChild(pointTrip.element, editPointTrip.element);
           editPointTrip.unblock();
           editPointTrip.unRender();
+          pointsPriceInit();
         })
         .catch(() => {
           editPointTrip.unblock();

@@ -1,6 +1,7 @@
-import {sectionTripPoints} from "./utils";
+import {pointsPriceInit, sectionTripPoints} from "./utils";
 import {api, message} from "./data";
 import {ModelPoint} from './model-point';
+import {pa} from './main';
 import moment from "moment";
 import {renderPointTrip} from "./point/render-points";
 
@@ -79,6 +80,7 @@ class Model {
       sectionTripPoints.innerHTML = message.loadData;
     } else {
       sectionTripPoints.appendChild(this._render(this._state.data));
+      pointsPriceInit();
     }
   }
 }
