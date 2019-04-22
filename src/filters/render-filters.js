@@ -2,7 +2,7 @@ import {Filter} from '../filters/filter';
 import {model} from '../model';
 import {sectionTripPoints} from "../utils";
 import {renderPointTrip} from "../point/render-points";
-import {renderMoneyChart, renderTransportChart} from "../statistic";
+import {renderMoneyChart, renderTransportChart, renderTimeChart} from "../statistic";
 
 const tripFilter = document.querySelector(`.trip-filter`);
 
@@ -28,6 +28,7 @@ filters.onChange = (evt) => {
 
   renderMoneyChart(sortData[`points`]);
   renderTransportChart(sortData[`points`]);
+  renderTimeChart(sortData[`points`]);
 
   sectionTripPoints.appendChild(renderPointTrip(sortData));
 };

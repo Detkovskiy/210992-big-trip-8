@@ -2,6 +2,7 @@ import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import {model} from "./model";
 import {icons} from "./data";
+import moment from 'moment';
 
 const moneyCtx = document.querySelector(`.statistic__money`);
 const transportCtx = document.querySelector(`.statistic__transport`);
@@ -191,6 +192,95 @@ const renderTransportChart = (data) => {
   });
 };
 
+const renderTimeChart = (data) => {
+
+  const getTimeChartData = (points) => {
+    const timePoint = {};
+    let duration = null;
+
+    Object.keys(points).map((item) => {
+      points[item].map((point) => {
+        if (!timePoint[point.type]) {
+          duration = moment.duration(moment(point.timeEnd).diff(moment(point.timeStart)));
+          timePoint[point.type] = +moment(duration, `x`).format(`kk`);
+        }
+        timePoint[point.type] += +moment(duration, `x`).format(`kk`);
+      });
+    });
+
+    return timePoint;
+  };
+
+  const timeChartData = getTimeChartData(data);
+
+  return new Chart(timeSpendCtx, {
+    plugins: [ChartDataLabels],
+    type: `horizontalBar`,
+    data: {
+      labels: Object.keys(timeChartData).map((it) => {
+        return icons[it] + it.toUpperCase();
+      }),
+      datasets: [{
+        data: Object.values(timeChartData),
+        backgroundColor: `#ffffff`,
+        hoverBackgroundColor: `#ffffff`,
+        anchor: `start`
+      }]
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          font: {
+            size: 13
+          },
+          color: `#000000`,
+          anchor: `end`,
+          align: `start`,
+          formatter: (val) => `${val}H`
+        }
+      },
+      title: {
+        display: true,
+        text: `TIME SPENT`,
+        fontColor: `#000000`,
+        fontSize: 23,
+        position: `left`
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            fontColor: `#000000`,
+            padding: 5,
+            fontSize: 13,
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+          barThickness: 44
+        }],
+        xAxes: [{
+          ticks: {
+            display: false,
+            beginAtZero: true,
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+          minBarLength: 50
+        }],
+      },
+      legend: {
+        display: false
+      },
+      tooltips: {
+        enabled: false,
+      }
+    }
+  });
+};
+
 const statisticInit = () => {
   statsTrigger.addEventListener(`click`, (evt) => {
     evt.preventDefault();
@@ -202,6 +292,7 @@ const statisticInit = () => {
 
     renderMoneyChart(model.points);
     renderTransportChart(model.points);
+    renderTimeChart(model.points);
   });
 
   tripTrigger.addEventListener(`click`, (evt) => {
@@ -214,4 +305,4 @@ const statisticInit = () => {
   });
 };
 
-export {statisticInit, renderMoneyChart, renderTransportChart};
+export {statisticInit, renderMoneyChart, renderTransportChart, renderTimeChart};
