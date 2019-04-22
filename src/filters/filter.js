@@ -1,7 +1,7 @@
 import {createElement} from "../utils/utils";
 import moment from 'moment';
 
-export class Filter {
+export default class Filter {
   constructor() {
     this._element = null;
     this._onChange = null;

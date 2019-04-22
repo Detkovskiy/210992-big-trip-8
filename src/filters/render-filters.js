@@ -1,4 +1,4 @@
-import {Filter} from '../filters/filter';
+import Filter from '../filters/filter';
 import {model} from '../utils/model';
 import {sectionTripPoints} from "../utils/utils";
 import {renderPointTrip} from "../point/render-points";

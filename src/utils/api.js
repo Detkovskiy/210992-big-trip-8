@@ -1,4 +1,4 @@
-import {ModelPoint} from '../point/model-point';
+import ModelPoint from '../point/model-point';
 
 const Method = {
   GET: `GET`,
@@ -20,7 +20,7 @@ const toJSON = (response) => {
   return response.json();
 };
 
-export class Api {
+export default class Api {
   constructor({endPoint, authorization}) {
     this._endPoint = endPoint;
     this._authorization = authorization;

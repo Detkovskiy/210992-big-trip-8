@@ -1,7 +1,7 @@
-import {Component} from './component';
+import Component from './component';
 import moment from 'moment';
 
-export class PointTrip extends Component {
+export default class PointTrip extends Component {
   constructor(data) {
     super();
     this._type = data.type;

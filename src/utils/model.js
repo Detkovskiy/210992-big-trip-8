@@ -1,6 +1,6 @@
 import {pointsPriceInit, sectionTripPoints} from "./utils";
 import {api, message} from "./data";
-import {ModelPoint} from '../point/model-point';
+import ModelPoint from '../point/model-point';
 import moment from "moment";
 import {renderPointTrip} from "../point/render-points";
 

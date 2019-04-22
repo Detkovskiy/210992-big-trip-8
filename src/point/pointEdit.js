@@ -1,4 +1,4 @@
-import {Component} from './component';
+import Component from './component';
 import moment from 'moment';
 import flatpickr from "flatpickr";
 

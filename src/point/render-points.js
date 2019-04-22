@@ -1,4 +1,4 @@
-import {PointTrip} from "./make-point";
+import PointTrip from "./make-point";
 import EditTrip from "./pointEdit";
 import {message} from "../utils/data";
 import {api} from "../utils/data";

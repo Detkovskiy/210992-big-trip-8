@@ -22,6 +22,10 @@ const getNewPointForm = (data) => {
     newPoint.unRender();
   };
 
+  newPoint.onFavorite = () => {
+    it.isFavorite = !it.isFavorite;
+  };
+
   newPoint.onSubmit = (newObject) => {
     newPoint.block();
     newPoint.changeColorBorder(false);
