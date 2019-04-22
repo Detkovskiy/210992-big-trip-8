@@ -1,9 +1,8 @@
-import {getDefaultDataNewPoint, message} from '../data';
-import {EditTrip} from "../pointEdit";
-import {sectionTripPoints} from "../utils";
-import {api} from "../data";
-import {model} from "../model";
-
+import {getDefaultDataNewPoint, message} from '../utils/data';
+import EditTrip from "./pointEdit";
+import {sectionTripPoints} from "../utils/utils";
+import {api} from "../utils/data";
+import {model} from "../utils/model";
 
 const newEventPoint = document.querySelector(`.new-event`);
 
@@ -17,7 +16,10 @@ const getNewPointForm = (data) => {
 
   newPoint.onChangeTravelType = (evt) => {
     newPoint.type = evt.target.value;
+  };
 
+  newPoint.onCancel = () => {
+    newPoint.unRender();
   };
 
   newPoint.onSubmit = (newObject) => {

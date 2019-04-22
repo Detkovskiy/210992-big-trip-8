@@ -1,7 +1,7 @@
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import {model} from "./model";
-import {icons} from "./data";
+import {model} from "./utils/model";
+import {icons} from "./utils/data";
 import moment from 'moment';
 
 const moneyCtx = document.querySelector(`.statistic__money`);

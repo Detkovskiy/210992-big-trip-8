@@ -1,6 +1,6 @@
-import {sectionTripPoints} from './utils';
-import {renderPointTrip} from "./point/render-points";
-import {model} from './model';
+import {sectionTripPoints} from '../utils/utils';
+import {renderPointTrip} from "../point/render-points";
+import {model} from '../utils/model';
 
 const sortingEvent = document.querySelector(`label[for="sorting-event"]`);
 const sortingTime = document.querySelector(`label[for="sorting-time"]`);
@@ -24,7 +24,7 @@ const sort = (typeSort) => {
   sectionTripPoints.appendChild(renderPointTrip(sortData));
 };
 
-export const sortingPointsInit = () => {
+const sortingPointsInit = () => {
   sortingEvent.addEventListener(`click`, () => {
     sort(event);
   });
@@ -38,3 +38,4 @@ export const sortingPointsInit = () => {
   });
 };
 
+export {sortingPointsInit};

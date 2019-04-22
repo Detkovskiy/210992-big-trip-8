@@ -1,6 +1,6 @@
 import {Filter} from '../filters/filter';
-import {model} from '../model';
-import {sectionTripPoints} from "../utils";
+import {model} from '../utils/model';
+import {sectionTripPoints} from "../utils/utils";
 import {renderPointTrip} from "../point/render-points";
 import {renderMoneyChart, renderTransportChart, renderTimeChart} from "../statistic";
 

@@ -1,7 +1,7 @@
 import moment from 'moment';
 import {Api} from "./api";
 
-const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZsswAszz=`;
+const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZsswszz=`;
 const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
 const api = new Api({endPoint: END_POINT, authorization: AUTHORIZATION});
 

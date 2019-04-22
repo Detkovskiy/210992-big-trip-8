@@ -1,4 +1,4 @@
-import {ModelPoint} from './model-point';
+import {ModelPoint} from '../point/model-point';
 
 const Method = {
   GET: `GET`,

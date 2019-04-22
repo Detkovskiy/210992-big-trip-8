@@ -1,10 +1,9 @@
-import {Component} from '../src/component';
+import {Component} from './component';
 import moment from 'moment';
 
 export class PointTrip extends Component {
   constructor(data) {
     super();
-    this._id = data.id;
     this._type = data.type;
     this._timeStart = data.timeStart;
     this._timeEnd = data.timeEnd;

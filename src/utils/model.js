@@ -1,9 +1,8 @@
 import {pointsPriceInit, sectionTripPoints} from "./utils";
 import {api, message} from "./data";
-import {ModelPoint} from './model-point';
-import {pa} from './main';
+import {ModelPoint} from '../point/model-point';
 import moment from "moment";
-import {renderPointTrip} from "./point/render-points";
+import {renderPointTrip} from "../point/render-points";
 
 class Model {
   constructor({ApiLoad, render}) {
@@ -17,6 +16,26 @@ class Model {
       },
       loading: true
     };
+  }
+
+  get lastId() {
+    return this._state.lastId;
+  }
+
+  get allData() {
+    return this._state.data;
+  }
+
+  get points() {
+    return this._state.data.points;
+  }
+
+  get offers() {
+    return this._state.data.offers;
+  }
+
+  get destinations() {
+    return this._state.data.destinations;
   }
 
   adaptData(data) {
@@ -50,26 +69,6 @@ class Model {
       .catch(() => {
         sectionTripPoints.innerHTML = message.loadFail;
       });
-  }
-
-  get lastId() {
-    return this._state.lastId;
-  }
-
-  get allData() {
-    return this._state.data;
-  }
-
-  get points() {
-    return this._state.data.points;
-  }
-
-  get offers() {
-    return this._state.data.offers;
-  }
-
-  get destinations() {
-    return this._state.data.destinations;
   }
 
   update() {

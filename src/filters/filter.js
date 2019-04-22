@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import {createElement} from "../utils/utils";
 import moment from 'moment';
 
 export class Filter {

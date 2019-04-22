@@ -1,9 +1,9 @@
-import {PointTrip} from "../make-point";
-import {EditTrip} from "../pointEdit";
-import {message} from "../data";
-import {api} from "../data";
-import {model} from '../model';
-import {createElement, getTripDayTemplate, sectionTripPoints, pointsPriceInit} from "../utils";
+import {PointTrip} from "./make-point";
+import EditTrip from "./pointEdit";
+import {message} from "../utils/data";
+import {api} from "../utils/data";
+import {model} from '../utils/model';
+import {createElement, getTripDayTemplate, sectionTripPoints, pointsPriceInit} from "../utils/utils";
 
 const renderPoints = (data, container) => {
   const fragmentPointsDay = document.createDocumentFragment();

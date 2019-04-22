@@ -1,8 +1,8 @@
-import {Component} from '../src/component';
+import {Component} from './component';
 import moment from 'moment';
 import flatpickr from "flatpickr";
 
-export class EditTrip extends Component {
+export default class EditTrip extends Component {
   constructor(data) {
     super();
     this._id = data.it.id;
@@ -15,7 +15,6 @@ export class EditTrip extends Component {
     this._destination = data.it.destination;
     this._allDescriptions = data.data.destinations;
     this._allOffers = data.data.offers;
-    this._onEdit = null;
     this._onEscKeydown = this._onEscKeydown.bind(this);
     this._onFavoriteButtonClick = this._onFavoriteButtonClick.bind(this);
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
@@ -144,57 +143,10 @@ export class EditTrip extends Component {
     }
   }
 
-  block() {
-    const formInputs = Array.from(this._element.querySelector(`form`).querySelectorAll(`input`));
-    const formButtons = Array.from(this._element.querySelector(`form`).querySelectorAll(`button`));
-
-    formButtons.concat(formInputs).forEach((item) => {
-      item.setAttribute(`disabled`, `disabled`);
-    });
-  }
-
-  unblock() {
-    const formInputs = Array.from(this._element.querySelector(`form`).querySelectorAll(`input`));
-    const formButtons = Array.from(this._element.querySelector(`form`).querySelectorAll(`button`));
-
-    formButtons.concat(formInputs).forEach((item) => {
-      item.removeAttribute(`disabled`);
-    });
-  }
-
-  onTextButtonChange(text, evtButton) {
-    this._element.querySelector(`.point__button--${evtButton}`).innerText = text;
-  }
-
-  changeColorBorder(change = true) {
-    if (change) {
-      this.element.classList.add(`error`);
-    } else {
-      this.element.classList.remove(`error`);
-    }
-  }
-
-  shake() {
-    this.element.classList.add(`shake`);
-  }
-
   set onChangeTravelType(fn) {
     if (typeof fn === `function`) {
       this._onTravelType = fn;
     }
-  }
-
-  update(data) {
-    this._price = data.price;
-    this._offers = data.offers;
-    this._type = data.type;
-    this._timeStart = data.timeStart;
-    this._timeEnd = data.timeEnd;
-    this._isFavorite = data.isFavorite;
-  }
-
-  updateIsFavorite(data) {
-    this._isFavorite = data;
   }
 
   static createMapper(target) {
@@ -207,7 +159,6 @@ export class EditTrip extends Component {
 
       },
       'offer': (value) => {
-        console.log(value);
         const offers = target.allOffers.find((item) => item.type === target.type).offers;
         const offerPrice = offers.find((item) => item.name === value).price;
         target.offers.push({title: value, accepted: true, price: offerPrice});
@@ -233,32 +184,6 @@ export class EditTrip extends Component {
         }
       }
     };
-  }
-
-  processForm(formData) {
-    const entry = {
-      id: this._id,
-      type: ``,
-      price: null,
-      offers: [],
-      allOffers: this._allOffers,
-      destination: this._allDescriptions,
-      timeStart: this._timeStart,
-      timeEnd: this._timeEnd,
-      day: null
-    };
-
-    const taskEditMapper = EditTrip.createMapper(entry);
-
-    for (const pair of formData.entries()) {
-      const [property, value] = pair;
-
-      if (taskEditMapper[property]) {
-        taskEditMapper[property](value);
-      }
-    }
-
-    return entry;
   }
 
   _onSubmitButtonClick(evt) {
@@ -327,15 +252,84 @@ export class EditTrip extends Component {
     this._onFavorite();
   }
 
+  processForm(formData) {
+    const entry = {
+      id: this._id,
+      type: ``,
+      price: null,
+      offers: [],
+      allOffers: this._allOffers,
+      destination: this._allDescriptions,
+      timeStart: this._timeStart,
+      timeEnd: this._timeEnd,
+      day: null
+    };
+
+    const taskEditMapper = EditTrip.createMapper(entry);
+
+    for (const pair of formData.entries()) {
+      const [property, value] = pair;
+
+      if (taskEditMapper[property]) {
+        taskEditMapper[property](value);
+      }
+    }
+
+    return entry;
+  }
+
+  block() {
+    const formInputs = Array.from(this._element.querySelector(`form`).querySelectorAll(`input`));
+    const formButtons = Array.from(this._element.querySelector(`form`).querySelectorAll(`button`));
+
+    formButtons.concat(formInputs).forEach((item) => {
+      item.setAttribute(`disabled`, `disabled`);
+    });
+  }
+
+  unblock() {
+    const formInputs = Array.from(this._element.querySelector(`form`).querySelectorAll(`input`));
+    const formButtons = Array.from(this._element.querySelector(`form`).querySelectorAll(`button`));
+
+    formButtons.concat(formInputs).forEach((item) => {
+      item.removeAttribute(`disabled`);
+    });
+  }
+
+  onTextButtonChange(text, evtButton) {
+    this._element.querySelector(`.point__button--${evtButton}`).innerText = text;
+  }
+
+  changeColorBorder(change = true) {
+    if (change) {
+      this.element.classList.add(`error`);
+    } else {
+      this.element.classList.remove(`error`);
+    }
+  }
+
+  shake() {
+    this.element.classList.add(`shake`);
+  }
+
+  update(data) {
+    this._price = data.price;
+    this._offers = data.offers;
+    this._type = data.type;
+    this._timeStart = data.timeStart;
+    this._timeEnd = data.timeEnd;
+  }
+
+  updateIsFavorite(data) {
+    this._isFavorite = data;
+  }
+
   bind() {
     document.addEventListener(`keydown`, this._onEscKeydown);
-
     this._element.querySelector(`.point__favorite`).addEventListener(`click`, this._onFavoriteButtonClick);
-
     this._element.querySelector(`.point__button--save`).addEventListener(`click`, this._onSubmitButtonClick);
     this._element.querySelector(`.point__button--delete`).addEventListener(`click`, this._onDeleteButtonClick);
     this._element.querySelector(`.point__destination-input`).addEventListener(`change`, this._onDestinationChange);
-
     this.element.querySelector(`.travel-way__select`).addEventListener(`change`, this._onSelectTypeTravel);
 
     flatpickr(this._element.querySelector(`.date-start`), {
@@ -360,8 +354,14 @@ export class EditTrip extends Component {
   }
 
   unbind() {
-    this._element.querySelector(`.point__button--save`).removeEventListener(`click`, this._onSubmitButtonClick);
-    document.removeEventListener(`keydown`, this._onEscKeydown); // !!!!!!!!!!
+    document.removeEventListener(`keydown`, this._onEscKeydown);
     this._element.querySelector(`.point__favorite`).removeEventListener(`click`, this._onFavoriteButtonClick);
+    this._element.querySelector(`.point__button--save`).removeEventListener(`click`, this._onSubmitButtonClick);
+    this._element.querySelector(`.point__button--delete`).removeEventListener(`click`, this._onDeleteButtonClick);
+    this._element.querySelector(`.point__destination-input`).removeEventListener(`change`, this._onDestinationChange);
+    this.element.querySelector(`.travel-way__select`).removeEventListener(`change`, this._onSelectTypeTravel);
+    flatpickr(this._element.querySelector(`.date-start`)).destroy();
+    flatpickr(this._element.querySelector(`.date-end`)).destroy();
+    flatpickr(this._element.querySelector(`input[name="day"]`)).destroy();
   }
 }
