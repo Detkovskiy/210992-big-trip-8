@@ -34,14 +34,13 @@ export class PointTrip extends Component {
   }
 
   set onEdit(fn) {
-    this._onEdit = fn;
+    if (typeof fn === `function`) {
+      this._onEdit = fn;
+    }
   }
 
   _onEditButtonClick() {
-
-    if (typeof this._onEdit === `function`) {
-      this._onEdit();
-    }
+    this._onEdit();
   }
 
   bind() {

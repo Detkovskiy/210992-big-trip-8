@@ -48,7 +48,6 @@ const renderPoints = (data, container) => {
         });
     };
 
-    // закрытие карточки по ESC работает плохо
     editPointTrip.onCancel = () => {
       pointTrip.render();
       container.querySelector(`.trip-day__items`).replaceChild(pointTrip.element, editPointTrip.element);

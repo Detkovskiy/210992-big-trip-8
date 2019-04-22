@@ -102,6 +102,9 @@ export class EditTrip extends Component {
             </article>`;
   }
 
+  get id() {
+    return this._id;
+  }
 
   set onSubmit(fn) {
     this._onSubmit = fn;
@@ -339,5 +342,6 @@ export class EditTrip extends Component {
 
   unbind() {
     this._element.querySelector(`.point__button--save`).removeEventListener(`click`, this._onSubmitButtonClick);
+    document.removeEventListener(`keydown`, this._onEscKeydown); // !!!!!!!!!!
   }
 }
