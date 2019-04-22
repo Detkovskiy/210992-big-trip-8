@@ -310,6 +310,10 @@ input[type=radio]:checked + .trip-sorting__item {
   box-sizing: border-box;
 }
 
+.trip-point__title::first-letter {
+  text-transform: uppercase;
+}
+
 .trip-point__schedule {
   display: flex;
   flex-direction: column;
@@ -339,7 +343,7 @@ input[type=radio]:checked + .trip-sorting__item {
   list-style: none;
   margin: 0;
   padding: 0;
-  width: 230px;
+ // width: 230px;
 }
 
 .trip-point__offer {
@@ -631,4 +635,32 @@ input[type=radio]:checked + .trip-sorting__item {
 .statistic__item {
   margin-bottom: 95px;
   width: 900px;
+}
+.error {
+  border: 2px solid red;
+  box-shadow: 0 11px 20px 0 rgba(255, 0, 0, 0.22);
+}
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-5px);
+  }
+
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(5px);
+  }
+}
+.shake {
+  animation: shake 0.6s;
 }

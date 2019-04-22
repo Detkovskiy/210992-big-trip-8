@@ -1,76 +1,17 @@
-import {PointTrip} from './make-point.js';
-import {EditTrip} from './pointEdit';
-import {Filter} from './filter';
-import {getTimeIsNow, openStats} from '../src/utils.js';
-import {getTrips, filtersName} from '../src/data.js';
-import {renderMoneyChart, renderTransportChart} from '../src/statistic.js';
-import moment from 'moment';
+import {renderFilter} from './filters/render-filters';
+import {statisticInit} from '../src/statistic.js';
+import {sortingPointsInit} from './filters/sortingPoints';
+import {newPointInit} from './point/new-point';
+import {model} from './utils/model';
 
-const tripFilter = document.querySelector(`.trip-filter`);
-const tripItems = document.querySelector(`.trip-day__items`);
-const dataNow = document.querySelector(`.trip-day__title`);
+renderFilter();
 
-const getDataForPointTrip = getTrips();
+model.init();
 
-const renderPointTrip = (data) => {
-  tripItems.innerHTML = ``;
-  const fragment = document.createDocumentFragment();
+model.update();
 
-  for (const it of data) {
-    const pointTrip = new PointTrip(it);
+statisticInit();
 
-    const editPointTrip = new EditTrip(it);
+newPointInit();
 
-    if (it.display) {
-      fragment.appendChild(pointTrip.render());
-    }
-
-    pointTrip.onEdit = () => {
-      editPointTrip.render();
-      tripItems.replaceChild(editPointTrip.element, pointTrip.element);
-      pointTrip.unRender();
-    };
-
-    editPointTrip.onSubmit = (newObject) => {
-      it.offers = newObject.offers;
-      it.price = newObject.price;
-      it.type = newObject.type;
-      it.time = newObject.time;
-
-      pointTrip.update(it);
-      pointTrip.render();
-      tripItems.replaceChild(pointTrip.element, editPointTrip.element);
-      editPointTrip.unRender();
-    };
-
-    editPointTrip.onDelete = () => {
-      it.display = false;
-      editPointTrip.unRender();
-    };
-  }
-
-  tripItems.appendChild(fragment);
-
-};
-
-renderPointTrip(getDataForPointTrip.events);
-dataNow.innerHTML = moment(getTimeIsNow(), `x`).format(`MMM DD`);
-
-const filters = new Filter();
-
-const renderFilter = () => {
-  tripFilter.appendChild(filters.render());
-};
-
-renderFilter(filtersName);
-
-filters.onChange = (it) => {
-  const sortData = filters.filterPoint(getDataForPointTrip, it.target.id);
-  renderPointTrip(sortData, tripItems);
-};
-
-openStats();
-
-renderMoneyChart(getDataForPointTrip.events);
-renderTransportChart(getDataForPointTrip.events);
-
+sortingPointsInit();

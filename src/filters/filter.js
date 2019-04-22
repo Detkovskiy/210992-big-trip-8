@@ -1,6 +1,7 @@
-import {createElement, getTimeIsNow} from "./utils";
+import {createElement} from "../utils/utils";
+import moment from 'moment';
 
-export class Filter {
+export default class Filter {
   constructor() {
     this._element = null;
     this._onChange = null;
@@ -27,17 +28,17 @@ export class Filter {
     switch (filterName) {
 
       case `filter-everything`:
-        sortData = data.events;
+        sortData = data;
         break;
 
       case `filter-future`:
-
-        sortData = data.events.filter((it) => it.time[0] > getTimeIsNow());
+        sortData = data.filter((it) => it > moment().format(`D MMM`));
         break;
 
       case `filter-past`:
-        sortData = data.events.filter((it) => it.time[0] < getTimeIsNow());
+        sortData = data.filter((it) => it < moment().format(`D MMM`));
     }
+
     return sortData;
   }
 

@@ -1,9 +1,17 @@
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import {model} from "./utils/model";
+import {icons} from "./utils/data";
+import moment from 'moment';
 
 const moneyCtx = document.querySelector(`.statistic__money`);
 const transportCtx = document.querySelector(`.statistic__transport`);
 const timeSpendCtx = document.querySelector(`.statistic__time-spend`);
+
+const mainBlock = document.querySelector(`.main`);
+const statBlock = document.querySelector(`.statistic`);
+const statsTrigger = document.querySelector(`a[href*=stat]`);
+const tripTrigger = document.querySelector(`a[href*=table]`);
 
 const BAR_HEIGHT = 55;
 moneyCtx.height = BAR_HEIGHT * 4;
@@ -12,30 +20,32 @@ timeSpendCtx.height = BAR_HEIGHT * 4;
 
 const renderMoneyChart = (data) => {
 
-  const getMoneyChartData = (arr) => {
-    const arrTypePoint = [];
-    const arrPricePoint = [];
+  const getMoneyChartData = (points) => {
+    const costPoint = {};
 
-    arr.forEach(function ([item, price]) {
-      if (arrTypePoint.indexOf(item) === -1) {
-        arrTypePoint.push(item);
-        arrPricePoint[arrTypePoint.indexOf(item)] = price;
-      } else {
-        arrPricePoint[arrTypePoint.indexOf(item)] += price;
-      }
+    Object.keys(points).map((item) => {
+      points[item].map((point) => {
+        if (!costPoint[point.type]) {
+          costPoint[point.type] = point.price;
+        }
+        costPoint[point.type] += point.price;
+      });
     });
 
-    return {arrTypePoint, arrPricePoint};
+    return costPoint;
   };
-  const moneyChartData = getMoneyChartData(data.map((it) => [it.icon + it.type.toUpperCase(), it.price]));
+
+  const moneyChartData = getMoneyChartData(data);
 
   return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: moneyChartData.arrTypePoint,
+      labels: Object.keys(moneyChartData).map((it) => {
+        return icons[it] + it.toUpperCase();
+      }),
       datasets: [{
-        data: moneyChartData.arrPricePoint,
+        data: Object.values(moneyChartData),
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`
@@ -97,33 +107,32 @@ const renderMoneyChart = (data) => {
 
 const renderTransportChart = (data) => {
 
-  const getTransportChartData = (arrLabels) => {
-    const arrTypePoint = [];
-    const arrColPoint = [];
+  const getTransportChartData = (points) => {
+    const counPoint = {};
 
-    arrLabels.forEach(function (item) {
-      if (arrTypePoint.indexOf(item) === -1) {
-        arrTypePoint.push(item);
-        arrColPoint[arrTypePoint.indexOf(item)] = 1;
-      } else {
-        arrColPoint[arrTypePoint.indexOf(item)] += 1;
-      }
+    Object.keys(points).map((item) => {
+      points[item].map((point) => {
+        if (!counPoint[point.type]) {
+          counPoint[point.type] = 1;
+        }
+        counPoint[point.type] += 1;
+      });
     });
 
-    return {arrTypePoint, arrColPoint};
+    return counPoint;
   };
 
-
-  const transportChartData = getTransportChartData(data.map((it) => it.icon + it.type.toUpperCase()));
-
+  const transportChartData = getTransportChartData(data);
 
   return new Chart(transportCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: transportChartData.arrTypePoint,
+      labels: Object.keys(transportChartData).map((it) => {
+        return icons[it] + it.toUpperCase();
+      }),
       datasets: [{
-        data: transportChartData.arrColPoint,
+        data: Object.values(transportChartData),
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`
@@ -183,4 +192,117 @@ const renderTransportChart = (data) => {
   });
 };
 
-export {renderMoneyChart, renderTransportChart};
+const renderTimeChart = (data) => {
+
+  const getTimeChartData = (points) => {
+    const timePoint = {};
+    let duration = null;
+
+    Object.keys(points).map((item) => {
+      points[item].map((point) => {
+        if (!timePoint[point.type]) {
+          duration = moment.duration(moment(point.timeEnd).diff(moment(point.timeStart)));
+          timePoint[point.type] = +moment(duration, `x`).format(`kk`);
+        }
+        timePoint[point.type] += +moment(duration, `x`).format(`kk`);
+      });
+    });
+
+    return timePoint;
+  };
+
+  const timeChartData = getTimeChartData(data);
+
+  return new Chart(timeSpendCtx, {
+    plugins: [ChartDataLabels],
+    type: `horizontalBar`,
+    data: {
+      labels: Object.keys(timeChartData).map((it) => {
+        return icons[it] + it.toUpperCase();
+      }),
+      datasets: [{
+        data: Object.values(timeChartData),
+        backgroundColor: `#ffffff`,
+        hoverBackgroundColor: `#ffffff`,
+        anchor: `start`
+      }]
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          font: {
+            size: 13
+          },
+          color: `#000000`,
+          anchor: `end`,
+          align: `start`,
+          formatter: (val) => `${val}H`
+        }
+      },
+      title: {
+        display: true,
+        text: `TIME SPENT`,
+        fontColor: `#000000`,
+        fontSize: 23,
+        position: `left`
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            fontColor: `#000000`,
+            padding: 5,
+            fontSize: 13,
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+          barThickness: 44
+        }],
+        xAxes: [{
+          ticks: {
+            display: false,
+            beginAtZero: true,
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+          minBarLength: 50
+        }],
+      },
+      legend: {
+        display: false
+      },
+      tooltips: {
+        enabled: false,
+      }
+    }
+  });
+};
+
+const statisticInit = () => {
+  statsTrigger.addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+
+    mainBlock.classList.add(`visually-hidden`);
+    tripTrigger.classList.remove(`view-switch__item--active`);
+    statsTrigger.classList.add(`view-switch__item--active`);
+    statBlock.classList.remove(`visually-hidden`);
+
+    renderMoneyChart(model.points);
+    renderTransportChart(model.points);
+    renderTimeChart(model.points);
+  });
+
+  tripTrigger.addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+
+    statBlock.classList.add(`visually-hidden`);
+    tripTrigger.classList.add(`view-switch__item--active`);
+    mainBlock.classList.remove(`visually-hidden`);
+    statsTrigger.classList.remove(`view-switch__item--active`);
+  });
+};
+
+export {statisticInit, renderMoneyChart, renderTransportChart, renderTimeChart};

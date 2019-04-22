@@ -1,12 +1,12 @@
-import {Component} from '../src/component';
+import Component from './component';
 import moment from 'moment';
 
-export class PointTrip extends Component {
+export default class PointTrip extends Component {
   constructor(data) {
     super();
     this._type = data.type;
-    this._timeStart = data.time[0];
-    this._timeEnd = data.time[1];
+    this._timeStart = data.timeStart;
+    this._timeEnd = data.timeEnd;
     this._price = data.price;
     this._offers = data.offers;
     this._onEdit = null;
@@ -23,23 +23,23 @@ export class PointTrip extends Component {
               </p>
               <p class="trip-point__price">€ ${this._price}</p>
               <ul class="trip-point__offers">
-              ${Object.entries(this._offers).map(([offer, checked]) => `${checked ? `
+              
+              ${this._offers.slice(0, 3).map((it) => `${it.accepted ? `
                 <li>
-                  <button class="trip-point__offer">${offer.replace(/-/g, ` `)}</button>
+                  <button class="trip-point__offer">${it.title}</button>
                 </li>` : ``}`).join(``)}
               </ul>
             </article>`;
   }
 
   set onEdit(fn) {
-    this._onEdit = fn;
+    if (typeof fn === `function`) {
+      this._onEdit = fn;
+    }
   }
 
   _onEditButtonClick() {
-
-    if (typeof this._onEdit === `function`) {
-      this._onEdit();
-    }
+    this._onEdit();
   }
 
   bind() {
@@ -54,7 +54,7 @@ export class PointTrip extends Component {
     this._price = data.price;
     this._offers = data.offers;
     this._type = data.type;
-    this._timeStart = data.time[0];
-    this._timeEnd = data.time[1];
+    this._timeStart = data.timeStart;
+    this._timeEnd = data.timeEnd;
   }
 }

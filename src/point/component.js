@@ -1,6 +1,6 @@
-import {createElement} from '../src/utils';
+import {createElement} from '../utils/utils';
 
-export class Component {
+export default class Component {
   constructor() {
     if (new.target === Component) {
       throw new Error(`Can't instantiate BaseComponent, only concrete one.`);
@@ -13,7 +13,7 @@ export class Component {
       'train': `🚂`,
       'flight': `✈️`,
       'check-in': `🏨`,
-      'sight-seeing': `🏛`
+      'sightseeing': `🏛`
     };
 
     this._element = null;
