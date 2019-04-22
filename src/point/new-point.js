@@ -8,7 +8,7 @@ import {model} from "../model";
 const newEventPoint = document.querySelector(`.new-event`);
 
 const getNewPointForm = (data) => {
-  const it = getDefaultDataNewPoint(data);
+  const it = getDefaultDataNewPoint(model.lastId);
   const newPoint = new EditTrip({it, data});
 
   newPoint.onChangeDestination = (evt) => {

@@ -1,6 +1,7 @@
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import {model} from "./model";
+import {icons} from "./data";
 
 const moneyCtx = document.querySelector(`.statistic__money`);
 const transportCtx = document.querySelector(`.statistic__transport`);
@@ -17,34 +18,33 @@ transportCtx.height = BAR_HEIGHT * 4;
 timeSpendCtx.height = BAR_HEIGHT * 4;
 
 const renderMoneyChart = (data) => {
-  const getMoneyChartData = (arr) => {
-    const arrTypePoint = [];
-    const arrPricePoint = [];
 
-    arr.forEach(function ([item, price]) {
-      if (arrTypePoint.indexOf(item) === -1) {
-        arrTypePoint.push(item);
-        arrPricePoint[arrTypePoint.indexOf(item)] = +price;
-      } else {
-        arrPricePoint[arrTypePoint.indexOf(item)] += price;
-      }
+  const getMoneyChartData = (points) => {
+    const costPoint = {};
+
+    Object.keys(points).map((item) => {
+      points[item].map((point) => {
+        if (!costPoint[point.type]) {
+          costPoint[point.type] = point.price;
+        }
+        costPoint[point.type] += point.price;
+      });
     });
 
-    return {arrTypePoint, arrPricePoint};
+    return costPoint;
   };
-  const moneyChartData = getMoneyChartData(data.map((it) => {
-    return [/*trips.icons[it.type] + */it.type.toUpperCase(), it.price];
-  }
 
-  ));
+  const moneyChartData = getMoneyChartData(data);
 
   return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: moneyChartData.arrTypePoint,
+      labels: Object.keys(moneyChartData).map((it) => {
+        return icons[it] + it.toUpperCase();
+      }),
       datasets: [{
-        data: moneyChartData.arrPricePoint,
+        data: Object.values(moneyChartData),
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`
@@ -106,33 +106,32 @@ const renderMoneyChart = (data) => {
 
 const renderTransportChart = (data) => {
 
-  const getTransportChartData = (arrLabels) => {
-    const arrTypePoint = [];
-    const arrColPoint = [];
+  const getTransportChartData = (points) => {
+    const counPoint = {};
 
-    arrLabels.forEach(function (item) {
-      if (arrTypePoint.indexOf(item) === -1) {
-        arrTypePoint.push(item);
-        arrColPoint[arrTypePoint.indexOf(item)] = 1;
-      } else {
-        arrColPoint[arrTypePoint.indexOf(item)] += 1;
-      }
+    Object.keys(points).map((item) => {
+      points[item].map((point) => {
+        if (!counPoint[point.type]) {
+          counPoint[point.type] = 1;
+        }
+        counPoint[point.type] += 1;
+      });
     });
 
-    return {arrTypePoint, arrColPoint};
+    return counPoint;
   };
 
-
-  const transportChartData = getTransportChartData(data.map((it) => /*trips.icons[it.type] + */it.type.toUpperCase()));
-
+  const transportChartData = getTransportChartData(data);
 
   return new Chart(transportCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: transportChartData.arrTypePoint,
+      labels: Object.keys(transportChartData).map((it) => {
+        return icons[it] + it.toUpperCase();
+      }),
       datasets: [{
-        data: transportChartData.arrColPoint,
+        data: Object.values(transportChartData),
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
         anchor: `start`
@@ -201,8 +200,8 @@ const statisticInit = () => {
     statsTrigger.classList.add(`view-switch__item--active`);
     statBlock.classList.remove(`visually-hidden`);
 
-    renderMoneyChart(model.dataStat);
-    renderTransportChart(model.dataStat);
+    renderMoneyChart(model.points);
+    renderTransportChart(model.points);
   });
 
   tripTrigger.addEventListener(`click`, (evt) => {
@@ -215,4 +214,4 @@ const statisticInit = () => {
   });
 };
 
-export {statisticInit};
+export {statisticInit, renderMoneyChart, renderTransportChart};

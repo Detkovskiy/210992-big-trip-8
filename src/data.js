@@ -5,10 +5,14 @@ const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZsswAszz=`;
 const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
 const api = new Api({endPoint: END_POINT, authorization: AUTHORIZATION});
 
-const dataTrips = {
-  points: [],
-  destinations: [],
-  offers: []
+const icons = {
+  'taxi': `🚕`,
+  'bus': `🚌`,
+  'drive': `🚗`,
+  'train': `🚂`,
+  'flight': `✈️`,
+  'check-in': `🏨`,
+  'sightseeing': `🏛`
 };
 
 const message = {
@@ -20,9 +24,9 @@ const message = {
   delete: `Delete`
 };
 
-const getDefaultDataNewPoint = (arrPoints) => {
+const getDefaultDataNewPoint = (lastId) => {
   return {
-    id: arrPoints.noAdapt.length,
+    id: lastId,
     price: 0,
     isFavorite: false,
     type: `taxi`,
@@ -37,4 +41,4 @@ const getDefaultDataNewPoint = (arrPoints) => {
   };
 };
 
-export {dataTrips, message, getDefaultDataNewPoint, api};
+export {message, getDefaultDataNewPoint, api, icons};

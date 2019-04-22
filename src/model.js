@@ -39,11 +39,11 @@ class Model {
   init() {
     this._api.loadAllData()
       .then(([points, offers, destinations]) => {
-        this._state.data.noAdapt = ModelPoint.parsePoints(points);
         this._state.data.points = this.adaptData(ModelPoint.parsePoints(points));
         this._state.data.offers = offers;
         this._state.data.destinations = destinations;
         this._state.loading = false;
+        this._state.lastId = points.length;
 
         this.update();
       })
@@ -52,9 +52,8 @@ class Model {
       });
   }
 
-  // пока так, массив без адаптации, надо переписывать код в статистике
-  get dataStat() {
-    return this._state.data.noAdapt;
+  get lastId() {
+    return this._state.lastId;
   }
 
   get allData() {
