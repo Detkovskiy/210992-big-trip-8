@@ -18,8 +18,13 @@ export class ModelPoint {
       'date_from': +this.timeStart,
       'date_to': +this.timeEnd,
       'destination': this.destination,
-      'is_favorite': this.isFavorite,
       'offers': this.offers
+    };
+  }
+
+  toID() {
+    return {
+      'is_favorite': this.isFavorite,
     };
   }
 

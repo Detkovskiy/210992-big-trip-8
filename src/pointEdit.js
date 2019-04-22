@@ -17,7 +17,7 @@ export class EditTrip extends Component {
     this._allOffers = data.data.offers;
     this._onEdit = null;
     this._onEscKeydown = this._onEscKeydown.bind(this);
-
+    this._onFavoriteButtonClick = this._onFavoriteButtonClick.bind(this);
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
     this._onDestinationChange = this._onDestinationChange.bind(this);
@@ -79,7 +79,7 @@ export class EditTrip extends Component {
                   </div>
             
                   <div class="paint__favorite-wrap">
-                    <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite">
+                    <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite" ${this._isFavorite && `checked`}>
                     <label class="point__favorite" for="favorite">favorite</label>
                   </div>
                 </header>
@@ -107,7 +107,15 @@ export class EditTrip extends Component {
   }
 
   set onSubmit(fn) {
-    this._onSubmit = fn;
+    if (typeof fn === `function`) {
+      this._onSubmit = fn;
+    }
+  }
+
+  set onFavorite(fn) {
+    if (typeof fn === `function`) {
+      this._onFavorite = fn;
+    }
   }
 
   set onDelete(fn) {
@@ -182,6 +190,11 @@ export class EditTrip extends Component {
     this._type = data.type;
     this._timeStart = data.timeStart;
     this._timeEnd = data.timeEnd;
+    this._isFavorite = data.isFavorite;
+  }
+
+  updateIsFavorite(data) {
+    this._isFavorite = data;
   }
 
   static createMapper(target) {
@@ -194,6 +207,7 @@ export class EditTrip extends Component {
 
       },
       'offer': (value) => {
+        console.log(value);
         const offers = target.allOffers.find((item) => item.type === target.type).offers;
         const offerPrice = offers.find((item) => item.name === value).price;
         target.offers.push({title: value, accepted: true, price: offerPrice});
@@ -309,9 +323,14 @@ export class EditTrip extends Component {
     }
   }
 
+  _onFavoriteButtonClick() {
+    this._onFavorite();
+  }
+
   bind() {
     document.addEventListener(`keydown`, this._onEscKeydown);
 
+    this._element.querySelector(`.point__favorite`).addEventListener(`click`, this._onFavoriteButtonClick);
 
     this._element.querySelector(`.point__button--save`).addEventListener(`click`, this._onSubmitButtonClick);
     this._element.querySelector(`.point__button--delete`).addEventListener(`click`, this._onDeleteButtonClick);
@@ -343,5 +362,6 @@ export class EditTrip extends Component {
   unbind() {
     this._element.querySelector(`.point__button--save`).removeEventListener(`click`, this._onSubmitButtonClick);
     document.removeEventListener(`keydown`, this._onEscKeydown); // !!!!!!!!!!
+    this._element.querySelector(`.point__favorite`).removeEventListener(`click`, this._onFavoriteButtonClick);
   }
 }

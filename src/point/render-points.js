@@ -54,6 +54,16 @@ const renderPoints = (data, container) => {
       editPointTrip.unRender();
     };
 
+    editPointTrip.onFavorite = () => {
+      it.isFavorite = !it.isFavorite;
+      editPointTrip.updateIsFavorite(it.isFavorite);
+      api.updateTask({id: it.id, data: it.toID()})
+        .catch(() => {
+          editPointTrip.changeColorBorder();
+          editPointTrip.shake();
+        });
+    };
+
     editPointTrip.onDelete = ({id}) => {
       editPointTrip.block();
       editPointTrip.changeColorBorder(false);
