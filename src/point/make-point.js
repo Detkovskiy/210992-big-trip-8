@@ -38,10 +38,6 @@ export default class PointTrip extends Component {
     }
   }
 
-  _onEditButtonClick() {
-    this._onEdit();
-  }
-
   bind() {
     this._element.addEventListener(`click`, this._onEditButtonClick);
   }
@@ -56,5 +52,9 @@ export default class PointTrip extends Component {
     this._type = data.type;
     this._timeStart = data.timeStart;
     this._timeEnd = data.timeEnd;
+  }
+
+  _onEditButtonClick() {
+    this._onEdit();
   }
 }

@@ -1,5 +1,5 @@
 import {getDefaultDataNewPoint, message} from '../utils/data';
-import EditTrip from "./pointEdit";
+import EditTrip from "./point-edit";
 import {sectionTripPoints} from "../utils/utils";
 import {api} from "../utils/data";
 import {model} from "../utils/model";
@@ -48,7 +48,7 @@ const getNewPointForm = (data) => {
         newPoint.unblock();
         newPoint.unRender();
         model.init();
-
+        newEventPoint.removeAttribute(`disabled`);
       })
       .catch(() => {
         newPoint.unblock();
@@ -61,10 +61,11 @@ const getNewPointForm = (data) => {
   return newPoint;
 };
 
-const newPointInit = () => {
+const newPointOnInit = () => {
   newEventPoint.addEventListener(`click`, () => {
     sectionTripPoints.prepend(getNewPointForm(model.allData).render());
+    newEventPoint.setAttribute(`disabled`, `disabled`);
   });
 };
 
-export {newPointInit};
+export {newPointOnInit};

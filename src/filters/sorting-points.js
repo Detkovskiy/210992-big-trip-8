@@ -11,7 +11,7 @@ const price = (a, b) => a.price - b.price;
 const time = (a, b) => (a.timeEnd - a.timeStart) - (b.timeEnd - b.timeStart);
 
 const sort = (typeSort) => {
-  let sortData = {};
+  const sortData = {};
 
   Object.keys(model.points).map((it) => {
     model.points[it].sort(typeSort);
@@ -24,7 +24,7 @@ const sort = (typeSort) => {
   sectionTripPoints.appendChild(renderPointTrip(sortData));
 };
 
-const sortingPointsInit = () => {
+const sortingPointsOnInit = () => {
   sortingEvent.addEventListener(`click`, () => {
     sort(event);
   });
@@ -38,4 +38,4 @@ const sortingPointsInit = () => {
   });
 };
 
-export {sortingPointsInit};
+export {sortingPointsOnInit};

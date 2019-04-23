@@ -33,16 +33,16 @@ export default class EditTrip extends Component {
                   </label>
             
                   <div class="travel-way">
-                    <label class="travel-way__label" for="travel-way__toggle">${this._icons[this._type]}️</label>
+                    <label class="travel-way__label" for="travel-way__toggle-${this._id}">${this._icons[this._type]}️</label>
             
-                    <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
+                    <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle-${this._id}">
             
                     <div class="travel-way__select">
                       <div class="travel-way__select-group">
                         ${Object.entries(this._icons).map(([typePoint, icon]) => ` 
                         
-                          <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${typePoint}" name="travel-way" value="${typePoint}" ${typePoint === this._type ? `checked` : ``}>
-                           <label class="travel-way__select-label" for="travel-way-${typePoint}">${icon} ${typePoint}</label>
+                          <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${typePoint}-${this._id}" name="travel-way" value="${typePoint}" ${typePoint === this._type ? `checked` : ``}>
+                           <label class="travel-way__select-label" for="travel-way-${typePoint}-${this._id}">${icon} ${typePoint}</label>
                         
                          `).join(``)}
                         
@@ -149,109 +149,6 @@ export default class EditTrip extends Component {
     }
   }
 
-  static createMapper(target) {
-    return {
-      'travel-way': (value) => {
-        target.type = value;
-      },
-      'price': (value) => {
-        target.price = +value;
-
-      },
-      'offer': (value) => {
-        const offers = target.allOffers.find((item) => item.type === target.type).offers;
-        const offerPrice = offers.find((item) => item.name === value).price;
-        target.offers.push({title: value, accepted: true, price: offerPrice});
-      },
-      'destination': (value) => {
-        target.destination = target.destination.find((item) => item.name === value);
-      },
-      'day': (value) => {
-        target.day = value;
-      },
-      'date-start': (value) => {
-        if (target.day) {
-          target.timeStart = moment(`${target.day} ${value}`, `MMM D hh:mm`).format(`x`);
-        } else {
-          target.timeStart = moment(value, `HH:mm`).format(`x`);
-        }
-      },
-      'date-end': (value) => {
-        if (target.day) {
-          target.timeEnd = moment(`${target.day} ${value}`, `MMM D hh:mm`).format(`x`);
-        } else {
-          target.timeEnd = moment(value, `HH:mm`).format(`x`);
-        }
-      }
-    };
-  }
-
-  _onSubmitButtonClick(evt) {
-    evt.preventDefault();
-
-    const formData = new FormData(this._element.querySelector(`.editPoint`));
-
-    const newData = this.processForm(formData);
-
-    if (typeof this._onSubmit === `function`) {
-      this._onSubmit(newData);
-    }
-
-    this.update(newData);
-  }
-
-  _onDeleteButtonClick(evt) {
-    evt.preventDefault();
-    if (typeof this._onDelete === `function`) {
-      this._onDelete({id: this._id});
-    }
-  }
-
-  _onDestinationChange(evt) {
-    this._onDestination(evt);
-    this._element.querySelector(`.point__destination`).innerHTML = this._getDestinationTemplate();
-  }
-
-  _getDestinationTemplate() {
-    return `
-      <div>
-        <h3 class="point__details-title">${this._destination.name}</h3>
-        <p class="point__destination-text">${this._destination.description}</p>
-        <div class="point__destination-images">
-        ${this._destination.pictures.map((it) => ` 
-          <img src="${it.src}" alt="${it.description}" class="point__destination-image">`).join(``)}
-      </div>`;
-  }
-
-  _getOffersTemplate() {
-    if (this._type !== `drive`) {
-      return `
-      ${this._allOffers.find((item) => item.type === this._type).offers.map((it) => ` 
-        <input class="point__offers-input visually-hidden" type="checkbox" id="${it.name}" name="offer" value="${it.name}" ${this._offers.find((offer) => offer.title === it.name && offer.accepted) ? `checked` : ``}>
-        <label for="${it.name}" class="point__offers-label">
-          <span class="point__offer-service">${it.name}</span> + €<span class="point__offer-price">${it.price}</span>
-        </label>`).join(``)}`;
-    } else {
-      return ``;
-    }
-  }
-
-  _onSelectTypeTravel(evt) {
-    this._onTravelType(evt);
-    this._element.querySelector(`.point__destination-label`).innerText = `${this._type} to`;
-    this._element.querySelector(`.point__offers-wrap`).innerHTML = this._getOffersTemplate();
-  }
-
-  _onEscKeydown(evt) {
-    if (evt.keyCode === 27) {
-      this._onCancel();
-    }
-  }
-
-  _onFavoriteButtonClick() {
-    this._onFavorite();
-  }
-
   processForm(formData) {
     const entry = {
       id: this._id,
@@ -279,6 +176,9 @@ export default class EditTrip extends Component {
   }
 
   block() {
+    if (this.element.classList.contains(`shake`)) {
+      this.element.classList.remove(`shake`);
+    }
     const formInputs = Array.from(this._element.querySelector(`form`).querySelectorAll(`input`));
     const formButtons = Array.from(this._element.querySelector(`form`).querySelectorAll(`button`));
 
@@ -363,5 +263,109 @@ export default class EditTrip extends Component {
     flatpickr(this._element.querySelector(`.date-start`)).destroy();
     flatpickr(this._element.querySelector(`.date-end`)).destroy();
     flatpickr(this._element.querySelector(`input[name="day"]`)).destroy();
+  }
+
+  _onSubmitButtonClick(evt) {
+    evt.preventDefault();
+
+    const formData = new FormData(this._element.querySelector(`.editPoint`));
+
+    const newData = this.processForm(formData);
+
+    if (typeof this._onSubmit === `function`) {
+      this._onSubmit(newData);
+    }
+
+    this.update(newData);
+  }
+
+  _onDeleteButtonClick(evt) {
+    evt.preventDefault();
+    if (typeof this._onDelete === `function`) {
+      this._onDelete({id: this._id});
+    }
+  }
+
+  _onDestinationChange(evt) {
+    this._onDestination(evt);
+    this._element.querySelector(`.point__destination`).innerHTML = this._getDestinationTemplate();
+  }
+
+  _getDestinationTemplate() {
+    return `
+      <div>
+        <h3 class="point__details-title">${this._destination.name}</h3>
+        <p class="point__destination-text">${this._destination.description}</p>
+        <div class="point__destination-images">
+        ${this._destination.pictures.map((it) => ` 
+          <img src="${it.src}" alt="${it.description}" class="point__destination-image">`).join(``)}
+      </div>`;
+  }
+
+  _getOffersTemplate() {
+    if (this._type !== `drive`) {
+      return `
+      ${this._allOffers.find((item) => item.type === this._type).offers.map((it) => ` 
+        <input class="point__offers-input visually-hidden" type="checkbox" id="${it.name}-${this._id}" name="offer" value="${it.name}" ${this._offers.find((offer) => offer.title === it.name && offer.accepted) ? `checked` : ``}>
+        <label for="${it.name}-${this._id}" class="point__offers-label">
+          <span class="point__offer-service">${it.name}</span> + €<span class="point__offer-price">${it.price}</span>
+        </label>`).join(``)}`;
+    } else {
+      return ``;
+    }
+  }
+
+  _onSelectTypeTravel(evt) {
+    this._onTravelType(evt);
+    this._element.querySelector(`.point__destination-label`).innerText = `${this._type} to`;
+    this._element.querySelector(`.point__offers-wrap`).innerHTML = this._getOffersTemplate();
+    this.element.querySelector(`.travel-way__toggle`).checked = false;
+  }
+
+  _onEscKeydown(evt) {
+    if (evt.keyCode === 27) {
+      this._onCancel();
+    }
+  }
+
+  _onFavoriteButtonClick() {
+    this._onFavorite();
+  }
+
+  static createMapper(target) {
+    return {
+      'travel-way': (value) => {
+        target.type = value;
+      },
+      'price': (value) => {
+        target.price = +value;
+
+      },
+      'offer': (value) => {
+        const offers = target.allOffers.find((item) => item.type === target.type).offers;
+        const offerPrice = offers.find((item) => item.name === value).price;
+        target.offers.push({title: value, accepted: true, price: offerPrice});
+      },
+      'destination': (value) => {
+        target.destination = target.destination.find((item) => item.name === value);
+      },
+      'day': (value) => {
+        target.day = value;
+      },
+      'date-start': (value) => {
+        if (target.day) {
+          target.timeStart = moment(`${target.day} ${value}`, `MMM D hh:mm`).format(`x`);
+        } else {
+          target.timeStart = moment(value, `HH:mm`).format(`x`);
+        }
+      },
+      'date-end': (value) => {
+        if (target.day) {
+          target.timeEnd = moment(`${target.day} ${value}`, `MMM D hh:mm`).format(`x`);
+        } else {
+          target.timeEnd = moment(value, `HH:mm`).format(`x`);
+        }
+      }
+    };
   }
 }

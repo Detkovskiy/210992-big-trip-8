@@ -281,7 +281,7 @@ const renderTimeChart = (data) => {
   });
 };
 
-const statisticInit = () => {
+const statisticOnInit = () => {
   statsTrigger.addEventListener(`click`, (evt) => {
     evt.preventDefault();
 
@@ -305,4 +305,4 @@ const statisticInit = () => {
   });
 };
 
-export {statisticInit, renderMoneyChart, renderTransportChart, renderTimeChart};
+export {statisticOnInit, renderMoneyChart, renderTransportChart, renderTimeChart};
