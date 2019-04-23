@@ -1,4 +1,5 @@
 import {model} from './model';
+import {provider} from '../point/render-points';
 
 const sectionTripPoints = document.querySelector(`.trip-points`);
 const tripTotalCost = document.querySelector(`.trip__total-cost`);
@@ -45,4 +46,17 @@ const getTripDayTemplate = (day, count) => {
     </section>`;
 };
 
-export {getTripDayTemplate, createElement, sectionTripPoints, pointsPriceInit};
+window.addEventListener(`offline`, () => {
+  document.title = `${document.title}[OFFLINE]`;
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.split(`[OFFLINE]`)[0];
+  provider.syncPoints();
+});
+
+const objectToArray = (object) => {
+  return Object.keys(object).map((id) => object[id]);
+};
+
+export {getTripDayTemplate, createElement, sectionTripPoints, pointsPriceInit, objectToArray};
