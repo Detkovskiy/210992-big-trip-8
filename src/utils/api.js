@@ -60,7 +60,7 @@ export default class Api {
       .then(ModelPoint.parsePoint);
   }
 
-  create(point) {
+  createPoint(point) {
     return this._load({
       url: `points`,
       method: Method.POST,

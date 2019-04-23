@@ -1,8 +1,8 @@
 import {getDefaultDataNewPoint, message} from '../utils/data';
 import EditTrip from "./point-edit";
 import {sectionTripPoints} from "../utils/utils";
-import {api} from "../utils/data";
 import {model} from "../utils/model";
+import {provider} from '../point/render-points';
 
 const newEventPoint = document.querySelector(`.new-event`);
 
@@ -42,7 +42,7 @@ const getNewPointForm = (data) => {
       'offers': newObject.offers
     };
 
-    api.create(dataSavePoint)
+    provider.createPoint(dataSavePoint)
       .then((newTask) => {
         newPoint.update(newTask);
         newPoint.unblock();

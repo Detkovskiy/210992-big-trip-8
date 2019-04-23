@@ -2,16 +2,14 @@ import ModelPoint from "../point/model-point";
 import {objectToArray} from "../utils/utils";
 
 export default class Provider {
-  constructor({api, store, generateId}) {
+  constructor({api, store}) {
     this._api = api;
     this._store = store;
-    this._generateId = generateId;
     this._needSync = false;
   }
 
   loadAllData() {
-    if (this._isOnline()) {
-
+    if (Provider.isOnline()) {
       return this._api.loadAllData()
         .then(([points, offers, destinations]) => {
           points.map((it) => this._store.setPoints({key: it.id, item: it}));
@@ -21,12 +19,13 @@ export default class Provider {
         });
     } else {
       const data = objectToArray(this._store.getAll());
+      console.log(data);
       return Promise.resolve(data);
     }
   }
 
   updatePoint({id, data}) {
-    if (this._isOnline()) {
+    if (Provider.isOnline()) {
       return this._api.updatePoint({id, data})
         .then((point) => {
           this._store.setPoints({key: point.id, item: point.toRAW()});
@@ -40,24 +39,23 @@ export default class Provider {
     }
   }
 
-  createTask({point}) {
-    if (this._isOnline()) {
-      return this._api.createTask({point})
+  createPoint(point) {
+    if (Provider.isOnline()) {
+      return this._api.createPoint(point)
         .then((newPoint) => {
-          this._store.setItem({key: newPoint.id, item: newPoint.toRAW()});
-          return newPoint;
+          this._store.setPoints({key: newPoint.id, item: newPoint});
+          return Promise.resolve(ModelPoint.parsePoint(newPoint));
         });
     } else {
-      point.id = this._generateId();
+      const id = point.id;
       this._needSync = true;
-
-      this._store.setItem({key: point.id, item: point});
+      this._store.setPoints({key: id, item: point});
       return Promise.resolve(ModelPoint.parsePoint(point));
     }
   }
 
   deletePoint({id}) {
-    if (this._isOnline()) {
+    if (Provider.isOnline()) {
       return this._api.deletePoint({id})
         .then(() => {
           this._store.removeItem({key: id});
@@ -73,7 +71,7 @@ export default class Provider {
     return this._api.syncPoints(objectToArray(this._store.getAll().points));
   }
 
-  _isOnline() {
+  static isOnline() {
     return window.navigator.onLine;
   }
 }

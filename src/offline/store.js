@@ -13,17 +13,17 @@ export default class Store {
   }
 
   setOffers(data) {
-    this._storage.setItem(`offers`, JSON.stringify(data));
+    this._storage.setItem(this._storeKey.offers, JSON.stringify(data));
   }
 
   setDestinations(data) {
-    this._storage.setItem(`destinations`, JSON.stringify(data));
+    this._storage.setItem(this._storeKey.destinations, JSON.stringify(data));
   }
 
   removeItem({key}) {
     const items = this.getPoints();
-
     delete items[key];
+    console.log(items);
     this._storage.setItem(this._storeKey.points, JSON.stringify(items));
   }
 

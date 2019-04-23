@@ -317,6 +317,7 @@ export default class EditTrip extends Component {
 
   _onSelectTypeTravel(evt) {
     this._onTravelType(evt);
+    this._element.querySelector(`.travel-way__label`).innerText = this._icons[this._type];
     this._element.querySelector(`.point__destination-label`).innerText = `${this._type} to`;
     this._element.querySelector(`.point__offers-wrap`).innerHTML = this._getOffersTemplate();
     this.element.querySelector(`.travel-way__toggle`).checked = false;

@@ -10,19 +10,14 @@ const createElement = (template) => {
   return newElement.firstChild;
 };
 
-
 const pointsPriceInit = () => {
-
   let pointsPrice = 0;
   let offersPrice = 0;
 
   Object.keys(model.points).map((it) => {
-
     model.points[it].map((i) => {
       pointsPrice += i.price;
-
       i.offers.map((j) => {
-
         if (j.accepted) {
           offersPrice += j.price;
         }

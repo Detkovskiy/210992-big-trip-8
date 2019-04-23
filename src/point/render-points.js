@@ -1,21 +1,14 @@
 import PointTrip from "./make-point";
 import EditTrip from "./point-edit";
 import Provider from "../offline/provider";
-import {message} from "../utils/data";
+import {message, DATA_STORE_KEY} from "../utils/data";
 import {api} from "../utils/data";
 import {createElement, getTripDayTemplate, sectionTripPoints, pointsPriceInit} from "../utils/utils";
 import Store from "../offline/store";
 import {model} from '../utils/model';
 
-
-const DATA_STORE_KEY = {
-  points: `points`,
-  offers: `offers`,
-  destinations: `destinations`
-};
-
 const store = new Store({key: DATA_STORE_KEY, storage: localStorage});
-const provider = new Provider({api, store, generateId: () => String(Date.now())});
+const provider = new Provider({api, store});
 
 
 const renderPoints = (data, container) => {

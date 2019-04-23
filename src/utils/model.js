@@ -60,6 +60,7 @@ class Model {
   init() {
     this._provider.loadAllData()
       .then(([points, offers, destinations]) => {
+        console.log([points, offers, destinations]);
         this._state.data.points = this.adaptData(ModelPoint.parsePoints(points));
         this._state.data.offers = offers;
         this._state.data.destinations = destinations;
