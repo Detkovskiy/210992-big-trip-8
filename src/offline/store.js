@@ -22,7 +22,7 @@ export default class Store {
 
   removeItem({key}) {
     const items = this.getPoints();
-    this._storage.setItem(this._storeKey.points, JSON.stringify(items.slice(key)));
+    this._storage.setItem(this._storeKey.points, JSON.stringify(items.splice(key)));
   }
 
   getPoints() {
