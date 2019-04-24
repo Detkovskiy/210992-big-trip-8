@@ -267,7 +267,6 @@ export default class EditTrip extends Component {
 
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
-
     const formData = new FormData(this._element.querySelector(`.editPoint`));
 
     const newData = this.processForm(formData);
