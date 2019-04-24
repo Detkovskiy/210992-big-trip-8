@@ -19,7 +19,6 @@ export default class Provider {
         });
     } else {
       const data = objectToArray(this._store.getAll());
-      console.log(data);
       return Promise.resolve(data);
     }
   }
