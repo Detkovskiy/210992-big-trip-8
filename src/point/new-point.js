@@ -20,10 +20,16 @@ const getNewPointForm = (data) => {
 
   newPoint.onCancel = () => {
     newPoint.unRender();
+    newEventPoint.removeAttribute(`disabled`);
   };
 
   newPoint.onFavorite = () => {
     it.isFavorite = !it.isFavorite;
+  };
+
+  newPoint.onDelete = () => {
+    newPoint.unRender();
+    newEventPoint.removeAttribute(`disabled`);
   };
 
   newPoint.onSubmit = (newObject) => {

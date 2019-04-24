@@ -227,7 +227,7 @@ export default class EditTrip extends Component {
   bind() {
     document.addEventListener(`keydown`, this._onEscKeydown);
     this._element.querySelector(`.point__favorite`).addEventListener(`click`, this._onFavoriteButtonClick);
-    this._element.querySelector(`.point__button--save`).addEventListener(`click`, this._onSubmitButtonClick);
+    this._element.querySelector(`form`).addEventListener(`submit`, this._onSubmitButtonClick);
     this._element.querySelector(`.point__button--delete`).addEventListener(`click`, this._onDeleteButtonClick);
     this._element.querySelector(`.point__destination-input`).addEventListener(`change`, this._onDestinationChange);
     this.element.querySelector(`.travel-way__select`).addEventListener(`change`, this._onSelectTypeTravel);
@@ -256,7 +256,7 @@ export default class EditTrip extends Component {
   unbind() {
     document.removeEventListener(`keydown`, this._onEscKeydown);
     this._element.querySelector(`.point__favorite`).removeEventListener(`click`, this._onFavoriteButtonClick);
-    this._element.querySelector(`.point__button--save`).removeEventListener(`click`, this._onSubmitButtonClick);
+    this._element.querySelector(`form`).removeEventListener(`submit`, this._onSubmitButtonClick);
     this._element.querySelector(`.point__button--delete`).removeEventListener(`click`, this._onDeleteButtonClick);
     this._element.querySelector(`.point__destination-input`).removeEventListener(`change`, this._onDestinationChange);
     this.element.querySelector(`.travel-way__select`).removeEventListener(`change`, this._onSelectTypeTravel);
