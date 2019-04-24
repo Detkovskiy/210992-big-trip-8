@@ -1,7 +1,7 @@
 import moment from 'moment';
 import Api from "./api";
 
-const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZswszz=`;
+const AUTHORIZATION = `Basic dXNlckBwYXNzd29xydtwssz=`;
 const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
 const api = new Api({endPoint: END_POINT, authorization: AUTHORIZATION});
 
@@ -41,4 +41,10 @@ const getDefaultDataNewPoint = (lastId) => {
   };
 };
 
-export {message, getDefaultDataNewPoint, api, icons};
+const DATA_STORE_KEY = {
+  points: `points`,
+  offers: `offers`,
+  destinations: `destinations`
+};
+
+export {message, getDefaultDataNewPoint, api, icons, DATA_STORE_KEY};

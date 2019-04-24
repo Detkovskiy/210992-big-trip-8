@@ -1,9 +1,15 @@
 import PointTrip from "./make-point";
-import EditTrip from "./pointEdit";
-import {message} from "../utils/data";
+import EditTrip from "./point-edit";
+import Provider from "../offline/provider";
+import {message, DATA_STORE_KEY} from "../utils/data";
 import {api} from "../utils/data";
-import {model} from '../utils/model';
 import {createElement, getTripDayTemplate, sectionTripPoints, pointsPriceInit} from "../utils/utils";
+import Store from "../offline/store";
+import {model} from '../utils/model';
+
+const store = new Store({key: DATA_STORE_KEY, storage: localStorage});
+const provider = new Provider({api, store});
+
 
 const renderPoints = (data, container) => {
   const fragmentPointsDay = document.createDocumentFragment();
@@ -31,7 +37,7 @@ const renderPoints = (data, container) => {
       it.timeEnd = newObject.timeEnd;
       it.destination = newObject.destination;
 
-      api.updateTask({id: it.id, data: it.toRAW()})
+      provider.updatePoint({id: it.id, data: it.toRAW()})
         .then((newTask) => {
           pointTrip.update(newTask);
           pointTrip.render();
@@ -57,7 +63,7 @@ const renderPoints = (data, container) => {
     editPointTrip.onFavorite = () => {
       it.isFavorite = !it.isFavorite;
       editPointTrip.updateIsFavorite(it.isFavorite);
-      api.updateTask({id: it.id, data: it.toID()})
+      provider.updatePoint({id: it.id, data: it.toID()})
         .catch(() => {
           editPointTrip.changeColorBorder();
           editPointTrip.shake();
@@ -69,7 +75,7 @@ const renderPoints = (data, container) => {
       editPointTrip.changeColorBorder(false);
       editPointTrip.onTextButtonChange(message.deleting, `delete`);
 
-      api.deleteTask({id})
+      provider.deletePoint({id})
         .then(() => {
           model.init();
         })
@@ -111,4 +117,4 @@ const renderPointTrip = ({points, offers, destinations}) => {
 };
 
 
-export {renderPointTrip};
+export {renderPointTrip, provider};

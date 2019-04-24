@@ -11,10 +11,10 @@ const renderFilter = () => {
   tripFilter.appendChild(filters.render());
 };
 
-filters.onChange = (evt) => {
-  let sortData = {};
+filters.onSort = (evt) => {
+  const sortData = {};
 
-  const sortDay = filters.filterPoint(Object.keys(model.points), evt.target.id);
+  const sortDay = Filter.points(Object.keys(model.points), evt.target.id);
   const getSortArr = (arr) => {
     return arr.reduce((acc, key) => {
       acc[key] = model.points[key];

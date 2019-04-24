@@ -1,12 +1,14 @@
 import {pointsPriceInit, sectionTripPoints} from "./utils";
-import {api, message} from "./data";
+import {message} from "./data";
 import ModelPoint from '../point/model-point';
+import {provider} from '../point/render-points';
 import moment from "moment";
 import {renderPointTrip} from "../point/render-points";
 
+
 class Model {
-  constructor({ApiLoad, render}) {
-    this._api = ApiLoad;
+  constructor({providerInit, render}) {
+    this._provider = providerInit;
     this._render = render;
     this._state = {
       data: {
@@ -56,7 +58,7 @@ class Model {
   }
 
   init() {
-    this._api.loadAllData()
+    this._provider.loadAllData()
       .then(([points, offers, destinations]) => {
         this._state.data.points = this.adaptData(ModelPoint.parsePoints(points));
         this._state.data.offers = offers;
@@ -83,6 +85,6 @@ class Model {
   }
 }
 
-const model = new Model({ApiLoad: api, render: renderPointTrip});
+const model = new Model({providerInit: provider, render: renderPointTrip});
 
 export {model};

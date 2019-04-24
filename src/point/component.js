@@ -15,7 +15,6 @@ export default class Component {
       'check-in': `🏨`,
       'sightseeing': `🏛`
     };
-
     this._element = null;
     this._state = {};
   }

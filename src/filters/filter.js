@@ -4,11 +4,31 @@ import moment from 'moment';
 export default class Filter {
   constructor() {
     this._element = null;
-    this._onChange = null;
-    this._onChangeFilter = this._onChangeFilter.bind(this);
+    this._onSort = null;
+    this._onChange = this._onChange.bind(this);
   }
 
-  get filterTemplate() {
+  set onSort(fn) {
+    this._onSort = fn;
+  }
+
+  bind() {
+    this._element.addEventListener(`change`, this._onChange);
+  }
+
+  render() {
+    this._element = createElement(Filter.template());
+    this.bind();
+    return this._element;
+  }
+
+  _onChange(evt) {
+    if (typeof this._onSort === `function`) {
+      this._onSort(evt);
+    }
+  }
+
+  static template() {
     return `<form class="trip-filter">
         <input type="radio" id="filter-everything" name="filter" value="everything" checked>
         <label class="trip-filter__item" for="filter-everything">everything</label>
@@ -19,11 +39,7 @@ export default class Filter {
       </form>`;
   }
 
-  set onChange(fn) {
-    this._onChange = fn;
-  }
-
-  filterPoint(data, filterName) {
+  static points(data, filterName) {
     let sortData = [];
     switch (filterName) {
 
@@ -40,22 +56,6 @@ export default class Filter {
     }
 
     return sortData;
-  }
-
-  _onChangeFilter(evt) {
-    if (typeof this._onChange === `function`) {
-      this._onChange(evt);
-    }
-  }
-
-  bind() {
-    this._element.addEventListener(`change`, this._onChangeFilter);
-  }
-
-  render() {
-    this._element = createElement(this.filterTemplate);
-    this.bind();
-    return this._element;
   }
 
 }
